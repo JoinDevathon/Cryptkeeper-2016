@@ -23,6 +23,8 @@
  */
 package org.devathon.contest2016;
 
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
 /**
@@ -33,22 +35,29 @@ public class AttackLogic implements Logic {
 
     private final NPC npc;
 
+    private int ticksSinceAttack;
+
     public AttackLogic(NPC npc) {
         this.npc = npc;
     }
 
     @Override
     public void tick() {
-
+        ticksSinceAttack++;
     }
 
     @Override
     public void execute() {
-
+        ((CraftCreature) npc.getEntity()).getHandle().B(((CraftEntity) npc.getEntity()).getHandle());
+        System.out.println("npc = " + npc);
     }
 
     @Override
     public double getWeight() {
+        if (ticksSinceAttack < 3) { // 7 CPS = 20/7 = ~2.8
+            //return 0;
+        }
+
         Entity target = npc.getEntity().getTarget();
 
         if (target == null) {
@@ -56,7 +65,7 @@ public class AttackLogic implements Logic {
         }
 
         if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(1.5, 2)) {
-            
+            return Double.MAX_VALUE;
         }
 
         return 0;

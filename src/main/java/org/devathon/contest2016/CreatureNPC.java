@@ -59,7 +59,7 @@ public class CreatureNPC implements NPC {
     public CreatureNPC(Class<? extends Creature> clazz) {
         this.clazz = clazz;
 
-        this.logics = Arrays.asList(new ThrowPotionLogic(this));
+        this.logics = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this));
     }
 
     @Override
