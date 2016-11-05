@@ -21,14 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
+package org.devathon.contest2016.entity.npc;
 
-import org.bukkit.event.Listener;
+import org.bukkit.Bukkit;
+import org.devathon.contest2016.DevathonPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class NPCListener implements Listener {
+public class NPCRegistry {
 
+    private final List<NPC> npcs = new ArrayList<>();
+
+    public void start() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(DevathonPlugin.getInstance(), this::tick, 2L, 2L);
+    }
+
+    public void register(NPC npc) {
+        npcs.add(npc);
+    }
+
+    private void tick() {
+        npcs.forEach(NPC::tick);
+    }
 }

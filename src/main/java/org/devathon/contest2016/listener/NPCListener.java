@@ -21,32 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
+package org.devathon.contest2016.listener;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
+import org.bukkit.event.Listener;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class TestCommand implements CommandExecutor {
+public class NPCListener implements Listener {
 
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-
-            NPC npc = new CreatureNPC(Zombie.class);
-
-            DevathonPlugin.getInstance().getNPCRegistry().register(npc);
-
-            npc.spawn(player.getLocation());
-        }
-
-        return true;
-    }
 }

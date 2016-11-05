@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
+package org.devathon.contest2016.entity.npc;
 
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -29,50 +29,52 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.devathon.contest2016.data.ArmorCategory;
+import org.devathon.contest2016.entity.FakeZombie;
+import org.devathon.contest2016.logic.AttackLogic;
+import org.devathon.contest2016.logic.Logic;
+import org.devathon.contest2016.logic.ThrowPotionLogic;
+import org.devathon.contest2016.util.ItemStackUtil;
+import org.devathon.contest2016.util.SelectUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.devathon.contest2016.ItemStackUtil.getGenericAttackDamage;
-import static org.devathon.contest2016.ItemStackUtil.getGenericDefense;
+import static org.devathon.contest2016.util.ItemStackUtil.getGenericAttackDamage;
+import static org.devathon.contest2016.util.ItemStackUtil.getGenericDefense;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class CreatureNPC implements NPC {
-
-    private final Class<? extends Creature> clazz;
-    private final List<Logic> logics;
+public class NPC {
 
     private final List<ItemStack> itemStacks = new ArrayList<>();
 
-    private Creature entity;
+    private final Supplier<Player> target;
+    private final List<Logic> logics;
 
-    public CreatureNPC(Class<? extends Creature> clazz) {
-        this.clazz = clazz;
+    private FakeZombie entity;
 
+    public NPC(Supplier<Player> target) {
+        this.target = target;
         this.logics = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this));
     }
 
-    @Override
     public void tick() {
-        if (entity.isDead() || !entity.isValid()) {
+        if (!entity.isAlive()) {
             return;
         }
 
-        Player target = EntityUtil.getClosestEntity(entity, 10, filter -> filter instanceof Player);
-
-        entity.setTarget(target);
-
-        System.out.println("target = " + target);
+        getBukkitEntity().setTarget(target.get());
 
         logics.forEach(Logic::tick);
 
@@ -96,9 +98,10 @@ public class CreatureNPC implements NPC {
         }
     }
 
-    @Override
     public void spawn(Location location) {
-        entity = location.getWorld().spawn(location, clazz);
+        entity = new FakeZombie(location);
+
+        Zombie entity = getBukkitEntity();
 
         entity.setCanPickupItems(false);
 
@@ -119,7 +122,6 @@ public class CreatureNPC implements NPC {
         }
     }
 
-    @Override
     public void pickupItem(ItemStack itemStack) {
         itemStacks.add(itemStack);
 
@@ -127,14 +129,20 @@ public class CreatureNPC implements NPC {
         updateArmor();
     }
 
-    @Override
-    public Creature getEntity() {
+    public FakeZombie getEntity() {
         return entity;
     }
 
-    @Override
+    public Zombie getBukkitEntity() {
+        return (Zombie) entity.getBukkitEntity();
+    }
+
     public Location getLocation() {
-        return entity.getLocation();
+        return getBukkitEntity().getLocation();
+    }
+
+    public Player getTarget() {
+        return target.get();
     }
 
     private void updateWeapon() {
@@ -146,7 +154,7 @@ public class CreatureNPC implements NPC {
         weighted.sort((a, b) -> -Double.compare(a.getRight(), b.getRight()));
 
         if (weighted.size() > 0) {
-            entity.getEquipment().setItemInMainHand(weighted.get(0).getLeft());
+            getBukkitEntity().getEquipment().setItemInMainHand(weighted.get(0).getLeft());
         }
     }
 
@@ -160,13 +168,16 @@ public class CreatureNPC implements NPC {
             weighted.sort((a, b) -> -Double.compare(a.getRight(), b.getRight()));
 
             if (weighted.size() > 0) {
-                category.applyTo(entity, weighted.get(0).getLeft());
+                category.applyTo(getBukkitEntity(), weighted.get(0).getLeft());
             }
         }
     }
 
-    @Override
     public List<ItemStack> getInventory() {
         return itemStacks;
+    }
+
+    public boolean isAlive() {
+        return entity.isAlive();
     }
 }

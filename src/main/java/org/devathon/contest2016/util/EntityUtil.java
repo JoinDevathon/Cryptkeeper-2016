@@ -21,13 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
+package org.devathon.contest2016.util;
 
 import net.minecraft.server.v1_10_R1.EntityInsentient;
+import net.minecraft.server.v1_10_R1.EntityTypes;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /**
@@ -35,6 +39,33 @@ import java.util.function.Predicate;
  * @since 05.11.2016
  */
 public class EntityUtil {
+
+    private static Map<Class<? extends net.minecraft.server.v1_10_R1.Entity>, Integer> ENTITY_ID_BY_CLASS;
+
+    static {
+        try {
+            Field field = EntityTypes.class.getDeclaredField("f");
+
+            field.setAccessible(true);
+
+            ENTITY_ID_BY_CLASS = (Map<Class<? extends net.minecraft.server.v1_10_R1.Entity>, Integer>) field.get(null);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static void register(EntityType entityType, Class<? extends net.minecraft.server.v1_10_R1.Entity> clazz) {
+        ENTITY_ID_BY_CLASS.put(clazz, (int) entityType.getTypeId());
+    }
+
+    public static void look(Entity entity, Entity other) {
+        net.minecraft.server.v1_10_R1.Entity entityOther = ((CraftEntity) other).getHandle();
+
+        if (entity instanceof EntityInsentient) {
+            System.out.println(entity + " looking at " + other);
+            ((EntityInsentient) entity).getControllerLook().a(entityOther, 10.F, ((EntityInsentient) entity).N());
+        }
+    }
 
     public static <T extends Entity> T getClosestEntity(Entity base, double maxDistance, Predicate<Entity> filter) {
         T bestEntity = null;
@@ -56,14 +87,5 @@ public class EntityUtil {
         }
 
         return bestEntity;
-    }
-
-    public static void look(Entity entity, Entity other) {
-        net.minecraft.server.v1_10_R1.Entity entityOther = ((CraftEntity) other).getHandle();
-
-        if (entity instanceof EntityInsentient) {
-            System.out.println(entity + " looking at " + other);
-            ((EntityInsentient) entity).getControllerLook().a(entityOther, 10.F, ((EntityInsentient) entity).N());
-        }
     }
 }

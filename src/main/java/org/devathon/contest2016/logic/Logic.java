@@ -21,35 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
-
-import gnu.trove.map.TObjectDoubleMap;
+package org.devathon.contest2016.logic;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class SelectUtil {
+public interface Logic {
 
-    public static <T> T select(TObjectDoubleMap<T> map) {
-        if (map.size() > 0) {
-            double total = 0;
+    void tick();
 
-            for (T key : map.keySet()) {
-                total += map.get(key);
-            }
+    void execute();
 
-            double target = Math.random() * total;
-
-            for (T key : map.keySet()) {
-                target -= map.get(key);
-
-                if (target <= 0) {
-                    return key;
-                }
-            }
-        }
-
-        return null;
-    }
+    double getWeight();
 }

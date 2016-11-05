@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
+package org.devathon.contest2016.logic;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
+import org.devathon.contest2016.entity.npc.NPC;
+import org.devathon.contest2016.util.EntityUtil;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -47,15 +50,15 @@ public class ThrowPotionLogic implements Logic {
 
     @Override
     public void tick() {
-        sincePotionThrown++;
+        sincePotionThrown = Math.max(sincePotionThrown--, 0);
     }
 
     @Override
     public void execute() {
-        sincePotionThrown = 0;
+        sincePotionThrown = (2 + ThreadLocalRandom.current().nextInt(3)) * 5;
 
-        if (npc.getEntity().getTarget() != null) {
-            EntityUtil.look(npc.getEntity(), npc.getEntity().getTarget());
+        if (npc.getTarget() != null) {
+            EntityUtil.look(npc.getBukkitEntity(), npc.getTarget());
         }
 
         List<ItemStack> potions = getPotions();
@@ -64,24 +67,24 @@ public class ThrowPotionLogic implements Logic {
 
         npc.getInventory().remove(itemStack);
 
-        ThrownPotion thrownPotion = npc.getEntity().launchProjectile(ThrownPotion.class);
+        ThrownPotion thrownPotion = npc.getBukkitEntity().launchProjectile(ThrownPotion.class);
 
         thrownPotion.setItem(itemStack);
     }
 
     @Override
     public double getWeight() {
-        if (sincePotionThrown < 1) {
+        if (sincePotionThrown > 0) {
             return 0;
         }
 
-        Entity target = npc.getEntity().getTarget();
+        LivingEntity target = npc.getTarget();
 
         if (target == null) {
             return 0;
         }
 
-        double distanceSq = target.getLocation().distanceSquared(npc.getEntity().getLocation());
+        double distanceSq = target.getLocation().distanceSquared(npc.getLocation());
 
         if (distanceSq > Math.pow(5.5, 2)) {
             return 0;

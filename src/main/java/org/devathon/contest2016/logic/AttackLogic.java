@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
+package org.devathon.contest2016.logic;
 
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.devathon.contest2016.entity.npc.NPC;
 
 /**
  * @author Cryptkeeper
@@ -48,7 +47,6 @@ public class AttackLogic implements Logic {
 
     @Override
     public void execute() {
-        ((CraftCreature) npc.getEntity()).getHandle().B(((CraftEntity) npc.getEntity()).getHandle());
         System.out.println("npc = " + npc);
     }
 
@@ -58,7 +56,7 @@ public class AttackLogic implements Logic {
             //return 0;
         }
 
-        Entity target = npc.getEntity().getTarget();
+        LivingEntity target = npc.getTarget();
 
         if (target == null) {
             return 0;

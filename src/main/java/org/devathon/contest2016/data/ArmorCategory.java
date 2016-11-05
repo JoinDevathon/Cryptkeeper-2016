@@ -1,4 +1,4 @@
-package org.devathon.contest2016;
+package org.devathon.contest2016.data;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
