@@ -21,63 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.logic;
+package org.devathon.contest2016.util;
+
+import net.minecraft.server.v1_10_R1.MethodProfiler;
+import net.minecraft.server.v1_10_R1.World;
+import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class LogicOptions {
+public class NMSUtil {
 
-    public static LogicOptions create() {
-        return new LogicOptions();
+    public static final MethodProfiler METHOD_PROFILER = new MethodProfiler();
+
+    public static World getWorld(org.bukkit.World world) {
+        return ((CraftWorld) world).getHandle();
     }
 
-    private String displayName = "Dummy";
-    private int simulatedCPS = 7;
-    private int potionThrowDelay = 15;
-    private double attackDamage = 3;
-
-    private LogicOptions() {
-    }
-
-    public LogicOptions attackDamage(double attackDamage) {
-        this.attackDamage = attackDamage;
-
-        return this;
-    }
-
-    public LogicOptions displayName(String displayName) {
-        this.displayName = displayName;
-
-        return this;
-    }
-
-    public LogicOptions simulatedCPS(int simulatedCPS) {
-        this.simulatedCPS = simulatedCPS;
-
-        return this;
-    }
-
-    public LogicOptions potionThrowDelay(int potionThrowDelay) {
-        this.potionThrowDelay = potionThrowDelay;
-
-        return this;
-    }
-
-    public double getAttackDamage() {
-        return attackDamage;
-    }
-
-    public int getPotionThrowDelay() {
-        return potionThrowDelay;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public int getSimulatedCPS() {
-        return simulatedCPS;
+    public static MethodProfiler getMethodProfiler() {
+        return METHOD_PROFILER;
     }
 }

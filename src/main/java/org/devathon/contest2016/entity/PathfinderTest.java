@@ -21,63 +21,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.logic;
+package org.devathon.contest2016.entity;
+
+import net.minecraft.server.v1_10_R1.EntityLiving;
+import net.minecraft.server.v1_10_R1.EntityZombie;
+import net.minecraft.server.v1_10_R1.EnumHand;
+import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class LogicOptions {
+public class PathfinderTest extends PathfinderGoalMeleeAttack {
 
-    public static LogicOptions create() {
-        return new LogicOptions();
+    private final EntityZombie h;
+    private int i;
+
+    public PathfinderTest(EntityZombie var1, double var2, boolean var4) {
+        super(var1, var2, var4);
+        this.h = var1;
     }
 
-    private String displayName = "Dummy";
-    private int simulatedCPS = 7;
-    private int potionThrowDelay = 15;
-    private double attackDamage = 3;
-
-    private LogicOptions() {
+    public void c() {
+        super.c();
+        this.i = 0;
     }
 
-    public LogicOptions attackDamage(double attackDamage) {
-        this.attackDamage = attackDamage;
+    public void d() {
+        super.d();
+        this.h.a(false);
 
-        return this;
     }
 
-    public LogicOptions displayName(String displayName) {
-        this.displayName = displayName;
+    public void e() {
+        super.e();
+        ++this.i;
+        if(this.i >= 5 && this.c < 10) {
+            this.h.a(true);
+        } else {
+            this.h.a(false);
+        }
 
-        return this;
     }
 
-    public LogicOptions simulatedCPS(int simulatedCPS) {
-        this.simulatedCPS = simulatedCPS;
+    @Override
+    protected void a(EntityLiving var1, double var2) {
+        double var4 = this.a(var1);
+        if(var2 <= var4 && this.c <= 0) {
+            this.c = 20;
+            this.b.a(EnumHand.MAIN_HAND);
+            this.b.B(var1);
+        }
 
-        return this;
-    }
-
-    public LogicOptions potionThrowDelay(int potionThrowDelay) {
-        this.potionThrowDelay = potionThrowDelay;
-
-        return this;
-    }
-
-    public double getAttackDamage() {
-        return attackDamage;
-    }
-
-    public int getPotionThrowDelay() {
-        return potionThrowDelay;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public int getSimulatedCPS() {
-        return simulatedCPS;
     }
 }

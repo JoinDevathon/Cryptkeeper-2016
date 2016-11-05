@@ -52,7 +52,7 @@ public class AttackLogic implements Logic {
 
     @Override
     public double getWeight() {
-        if (ticksSinceAttack < (20 / (double) npc.getConfig().getSimulatedCPS())) {
+        if (ticksSinceAttack < (20 / (double) npc.getOptions().getSimulatedCPS())) {
             //return 0;
         }
 

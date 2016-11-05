@@ -54,7 +54,7 @@ public class ThrowPotionLogic implements Logic {
 
     @Override
     public void execute() {
-        sincePotionThrown = npc.getConfig().getPotionThrowDelay();
+        sincePotionThrown = npc.getOptions().getPotionThrowDelay();
 
         if (npc.getTarget() != null) {
             EntityUtil.look(npc.getBukkitEntity(), npc.getTarget());

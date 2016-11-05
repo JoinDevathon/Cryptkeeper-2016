@@ -25,10 +25,11 @@ package org.devathon.contest2016.entity;
 
 import net.minecraft.server.v1_10_R1.EntityZombie;
 import net.minecraft.server.v1_10_R1.EnumZombieType;
+import net.minecraft.server.v1_10_R1.PathfinderGoalSelector;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.devathon.contest2016.util.EntityUtil;
+import org.devathon.contest2016.util.NMSUtil;
 
 /**
  * @author Cryptkeeper
@@ -41,12 +42,26 @@ public class FakeZombie extends EntityZombie {
     }
 
     public FakeZombie(Location location) {
-        super(((CraftWorld) location.getWorld()).getHandle());
+        super(NMSUtil.getWorld(location.getWorld()));
 
         setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         setBaby(false);
         setVillagerType(EnumZombieType.NORMAL);
 
         world.addEntity(this);
+    }
+
+    @Override
+    public void r() {
+        goalSelector = new PathfinderGoalSelector(NMSUtil.getMethodProfiler());
+
+        goalSelector.a(0, new PathfinderTest(this, 1D, false));
+        /*goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+
+        targetSelector = new PathfinderGoalSelector(NMSUtil.getMethodProfiler());
+
+        targetSelector.a(2, new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));*/
+
+        targetSelector = new PathfinderGoalSelector(NMSUtil.getMethodProfiler());
     }
 }

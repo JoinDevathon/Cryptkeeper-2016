@@ -26,7 +26,6 @@ package org.devathon.contest2016.npc;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.commons.lang3.tuple.Pair;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -62,13 +61,13 @@ public class NPC {
 
     private final Supplier<Player> target;
     private final List<Logic> logics;
-    private final LogicOptions config;
+    private final LogicOptions options;
 
     private FakeZombie entity;
 
-    public NPC(Supplier<Player> target, LogicOptions config) {
+    public NPC(Supplier<Player> target, LogicOptions options) {
         this.target = target;
-        this.config = config;
+        this.options = options;
 
         this.logics = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this));
     }
@@ -107,7 +106,7 @@ public class NPC {
         entity.setCanPickupItems(false);
 
         entity.setCustomNameVisible(true);
-        entity.setCustomName(ChatColor.RED + "Combat Trainer");
+        entity.setCustomName(options.getDisplayName());
 
         entity.getEquipment().setArmorContents(new ItemStack[4]);
         entity.getEquipment().setItemInMainHand(null);
@@ -173,8 +172,8 @@ public class NPC {
         return itemStacks;
     }
 
-    public LogicOptions getConfig() {
-        return config;
+    public LogicOptions getOptions() {
+        return options;
     }
 
     public boolean isAlive() {
