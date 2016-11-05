@@ -59,7 +59,7 @@ public class AttackLogic implements Logic {
     @Override
     public double getWeight() {
         if (ticksSinceAttack < (20 / (double) npc.getOptions().getSimulatedCPS())) {
-            //return 0;
+            return 0;
         }
 
         LivingEntity target = npc.getTarget();
@@ -73,7 +73,7 @@ public class AttackLogic implements Logic {
         double diff = ThreadLocalRandom.current().nextDouble(options.getHighReachDistance() - options.getLowReachDistance()) + options.getLowReachDistance();
 
         if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(diff, 2)) {
-            return Double.MAX_VALUE;
+            return 1;
         }
 
         return 0;

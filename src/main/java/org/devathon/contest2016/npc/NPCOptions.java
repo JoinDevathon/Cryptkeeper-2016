@@ -38,7 +38,7 @@ public class NPCOptions {
     private int potionThrowDelay = 15;
     private double attackDamage = 3;
     private double lowReachDistance = 1.5;
-    private double highReachDistance = 4;
+    private double highReachDistance = 3.5;
 
     private NPCOptions() {
     }

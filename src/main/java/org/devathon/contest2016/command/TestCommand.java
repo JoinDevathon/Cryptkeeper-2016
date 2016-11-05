@@ -43,7 +43,7 @@ public class TestCommand implements CommandExecutor {
             Player player = (Player) commandSender;
 
             NPC npc = new NPC(() -> player, NPCOptions.create()
-                .simulatedCPS(20));
+                .simulatedCPS(7));
 
             npc.spawn(player.getLocation());
 
