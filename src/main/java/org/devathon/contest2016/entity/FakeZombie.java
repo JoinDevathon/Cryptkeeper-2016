@@ -55,13 +55,6 @@ public class FakeZombie extends EntityZombie {
     public void r() {
         goalSelector = new PathfinderGoalSelector(NMSUtil.getMethodProfiler());
 
-        goalSelector.a(0, new PathfinderTest(this, 1D, false));
-        /*goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-
-        targetSelector = new PathfinderGoalSelector(NMSUtil.getMethodProfiler());
-
-        targetSelector.a(2, new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));*/
-
-        targetSelector = new PathfinderGoalSelector(NMSUtil.getMethodProfiler());
+        goalSelector.a(0, new FollowEntityPathfinderGoal(this, 1D, false));
     }
 }

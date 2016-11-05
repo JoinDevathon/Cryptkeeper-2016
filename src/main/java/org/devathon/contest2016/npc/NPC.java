@@ -112,7 +112,7 @@ public class NPC {
         entity.getEquipment().setItemInOffHand(null);
 
         for (int i = 0; i < 36; i++) {
-            itemStacks.add(ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 20 * 10, 0))));
+            itemStacks.add(ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.HEAL, 20 * 10, 0))));
         }
     }
 

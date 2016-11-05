@@ -24,12 +24,14 @@
 package org.devathon.contest2016.npc;
 
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityCombustEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
-import org.devathon.contest2016.entity.FakeZombie;
+import org.devathon.contest2016.DevathonPlugin;
 
 /**
  * @author Cryptkeeper
@@ -38,18 +40,27 @@ import org.devathon.contest2016.entity.FakeZombie;
 public class NPCListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onPotionSplash(PotionSplashEvent event) {
-        
+    public void onPotionSplash(EntityDamageByEntityEvent event) {
+        if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity()) && event.getDamager() instanceof ThrownPotion) {
+            System.out.println("zombie hurt");
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        if (event.getEntity() instanceof FakeZombie) {
+        if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity())) {
             if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.MAGIC) {
                 event.setCancelled(true);
 
                 ((LivingEntity) event.getEntity()).damage(event.getAmount());
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onEntityCombust(EntityCombustEvent event) {
+        if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity()) && event.getDuration() == 8) {
+            event.setCancelled(true);
         }
     }
 }

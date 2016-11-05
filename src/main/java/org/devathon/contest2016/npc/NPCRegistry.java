@@ -24,6 +24,7 @@
 package org.devathon.contest2016.npc;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.devathon.contest2016.DevathonPlugin;
 
 import java.util.ArrayList;
@@ -63,5 +64,19 @@ public class NPCRegistry {
         if (toRemove != null) {
             npcs.removeAll(toRemove);
         }
+    }
+
+    public boolean isNPC(int entityId) {
+        for (NPC npc : npcs) {
+            if (npc.getBukkitEntity().getEntityId() == entityId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isNPC(Entity entity) {
+        return isNPC(entity.getEntityId());
     }
 }

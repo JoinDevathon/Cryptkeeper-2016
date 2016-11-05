@@ -23,12 +23,9 @@
  */
 package org.devathon.contest2016.util;
 
-import net.minecraft.server.v1_10_R1.EntityLiving;
 import net.minecraft.server.v1_10_R1.MethodProfiler;
 import net.minecraft.server.v1_10_R1.World;
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
 
 /**
  * @author Cryptkeeper
@@ -40,10 +37,6 @@ public class NMSUtil {
 
     public static World getWorld(org.bukkit.World world) {
         return ((CraftWorld) world).getHandle();
-    }
-
-    public static EntityLiving getEntityLiving(LivingEntity entity) {
-        return ((CraftLivingEntity) entity).getHandle();
     }
 
     public static MethodProfiler getMethodProfiler() {
