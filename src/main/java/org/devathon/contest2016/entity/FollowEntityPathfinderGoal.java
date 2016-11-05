@@ -32,8 +32,19 @@ import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
  */
 public class FollowEntityPathfinderGoal extends PathfinderGoalMeleeAttack {
 
+    private final FakeZombie npc;
+
     public FollowEntityPathfinderGoal(FakeZombie npc, double var2, boolean var4) {
         super(npc, var2, var4);
+
+        this.npc = npc;
+    }
+
+    @Override
+    public void d() {
+        if (!npc.standingStill) {
+            super.d();
+        }
     }
 
     @Override

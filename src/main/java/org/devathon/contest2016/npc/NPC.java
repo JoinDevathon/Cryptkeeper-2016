@@ -82,7 +82,7 @@ public class NPC {
             return;
         }
 
-        getBukkitEntity().setTarget(target.get());
+        getBukkitEntity().setTarget(getTarget());
 
         logics.forEach(Logic::tick);
 
@@ -102,7 +102,7 @@ public class NPC {
             logic.execute();
         }
 
-        for (Entity entity : getBukkitEntity().getNearbyEntities(5, 2.5, 5)) {
+        for (Entity entity : getBukkitEntity().getNearbyEntities(4.5, 2.5, 4.5)) {
             if (entity instanceof Item) {
                 Item item = (Item) entity;
 
@@ -115,12 +115,22 @@ public class NPC {
                 }
             }
         }
+
+        Player target = getTarget();
+
+        if (target != null) {
+            double distanceSq = getLocation().distanceSquared(target.getLocation());
+
+            if (distanceSq > Math.pow(options.getSprintDistance(), 2)) {
+                setSprinting(true);
+            } else {
+                setSprinting(target.isSprinting());
+            }
+        }
     }
 
     public void spawn(Location location) {
         entity = new FakeZombie(location);
-
-        setSprinting(true); // TODO: Remove
 
         Zombie entity = getBukkitEntity();
 
@@ -146,7 +156,7 @@ public class NPC {
     }
 
     public void setSprinting(boolean sprinting) {
-        double speed = sprinting ? 4 * 2;
+        double speed = sprinting ? 5 : 3;
 
         speed *= NMSUtil.PLAYER_ABILITIES.walkSpeed;
 

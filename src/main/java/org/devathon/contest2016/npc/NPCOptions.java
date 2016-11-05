@@ -39,6 +39,7 @@ public class NPCOptions {
     private double attackDamage = 3;
     private double lowReachDistance = 1.5;
     private double highReachDistance = 3.5;
+    private double sprintDistance = 5;
 
     private NPCOptions() {
     }
@@ -77,6 +78,16 @@ public class NPCOptions {
         this.potionThrowDelay = potionThrowDelay;
 
         return this;
+    }
+
+    public NPCOptions sprintDistance(double sprintDistance) {
+        this.sprintDistance = sprintDistance;
+
+        return this;
+    }
+
+    public double getSprintDistance() {
+        return sprintDistance;
     }
 
     public double getAttackDamage() {
