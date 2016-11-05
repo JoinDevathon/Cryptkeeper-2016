@@ -28,6 +28,8 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
@@ -95,6 +97,18 @@ public class NPC {
         if (logic != null) {
             logic.execute();
         }
+
+        for (Entity entity : getBukkitEntity().getNearbyEntities(5, 2.5, 5)) {
+            if (entity instanceof Item) {
+                Item item = (Item) entity;
+
+                System.out.println(item);
+
+                pickupItem(item.getItemStack());
+
+                item.remove();
+            }
+        }
     }
 
     public void spawn(Location location) {
@@ -116,7 +130,7 @@ public class NPC {
         }
     }
 
-    public void pickupItem(ItemStack itemStack) {
+    private void pickupItem(ItemStack itemStack) {
         itemStacks.add(itemStack);
 
         updateWeapon();
