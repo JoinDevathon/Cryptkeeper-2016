@@ -24,12 +24,29 @@
 package org.devathon.contest2016;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+
+import java.util.List;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
 public class ItemStackUtil {
+
+    public static ItemStack makeSplashPotion(Material material, List<PotionEffect> effects) {
+        ItemStack itemStack = new ItemStack(material);
+
+        PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
+
+        effects.forEach(effect -> potionMeta.addCustomEffect(effect, true));
+
+        itemStack.setItemMeta(potionMeta);
+
+        return itemStack;
+    }
 
     public static double getGenericDefense(ArmorCategory category, Material material) {
         switch (category) {

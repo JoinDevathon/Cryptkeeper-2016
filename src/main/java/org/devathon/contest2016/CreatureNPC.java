@@ -23,11 +23,17 @@
  */
 package org.devathon.contest2016;
 
+import gnu.trove.map.TObjectDoubleMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.Material;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,17 +47,16 @@ import static org.devathon.contest2016.ItemStackUtil.getGenericDefense;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class LivingEntityNPC<T extends LivingEntity> implements NPC<T> {
+public class CreatureNPC implements NPC {
 
-    private final Class<T> clazz;
+    private final Class<? extends Creature> clazz;
     private final List<Logic> logics;
 
     private final List<ItemStack> itemStacks = new ArrayList<>();
 
-    private T entity;
-    private LivingEntity target;
+    private Creature entity;
 
-    public LivingEntityNPC(Class<T> clazz) {
+    public CreatureNPC(Class<? extends Creature> clazz) {
         this.clazz = clazz;
 
         this.logics = Arrays.asList(new ThrowPotionLogic(this));
@@ -59,7 +64,36 @@ public class LivingEntityNPC<T extends LivingEntity> implements NPC<T> {
 
     @Override
     public void tick() {
+        if (entity.isDead() || !entity.isValid()) {
+            return;
+        }
+
+        Player target = EntityUtil.getClosestEntity(entity, 10, filter -> filter instanceof Player);
+
+        entity.setTarget(target);
+
+        System.out.println("target = " + target);
+
         logics.forEach(Logic::tick);
+
+        TObjectDoubleMap<Logic> byWeight = new TObjectDoubleHashMap<>();
+
+        for (Logic logic : logics) {
+            double weight = logic.getWeight();
+
+            if (weight > 0) {
+                byWeight.put(logic, logic.getWeight());
+            }
+        }
+
+        Logic logic = SelectUtil.select(byWeight);
+
+        System.out.println("byWeight = " + byWeight);
+        System.out.println("logic = " + logic);
+
+        if (logic != null) {
+            logic.execute();
+        }
     }
 
     @Override
@@ -79,6 +113,10 @@ public class LivingEntityNPC<T extends LivingEntity> implements NPC<T> {
         entity.getEquipment().setChestplateDropChance(1F);
         entity.getEquipment().setLeggingsDropChance(1F);
         entity.getEquipment().setBootsDropChance(1F);
+
+        for (int i = 0; i < 36; i++) {
+            itemStacks.add(ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 20 * 10, 0))));
+        }
     }
 
     @Override
@@ -90,18 +128,13 @@ public class LivingEntityNPC<T extends LivingEntity> implements NPC<T> {
     }
 
     @Override
-    public void setTarget(LivingEntity target) {
-        this.target = target;
-    }
-
-    @Override
-    public T getEntity() {
+    public Creature getEntity() {
         return entity;
     }
 
     @Override
-    public LivingEntity getTarget() {
-        return target;
+    public Location getLocation() {
+        return entity.getLocation();
     }
 
     private void updateWeapon() {

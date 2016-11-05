@@ -40,7 +40,9 @@ public class TestCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
-            NPC npc = new LivingEntityNPC<>(Zombie.class);
+            NPC npc = new CreatureNPC(Zombie.class);
+
+            DevathonPlugin.getInstance().getNPCRegistry().register(npc);
 
             npc.spawn(player.getLocation());
         }

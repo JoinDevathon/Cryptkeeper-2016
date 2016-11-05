@@ -1,18 +1,18 @@
 /*
  * MIT License
- *
+ * 
  * Copyright (c) 2016
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,27 +23,42 @@
  */
 package org.devathon.contest2016;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Creature;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
+import org.bukkit.entity.Entity;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public interface NPC {
+public class AttackLogic implements Logic {
 
-    void tick();
+    private final NPC npc;
 
-    void spawn(Location location);
+    public AttackLogic(NPC npc) {
+        this.npc = npc;
+    }
 
-    void pickupItem(ItemStack itemStack);
+    @Override
+    public void tick() {
 
-    Creature getEntity();
+    }
 
-    Location getLocation();
+    @Override
+    public void execute() {
 
-    List<ItemStack> getInventory();
+    }
+
+    @Override
+    public double getWeight() {
+        Entity target = npc.getEntity().getTarget();
+
+        if (target == null) {
+            return 0;
+        }
+
+        if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(1.5, 2)) {
+            
+        }
+
+        return 0;
+    }
 }

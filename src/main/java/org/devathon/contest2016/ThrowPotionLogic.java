@@ -24,7 +24,7 @@
 package org.devathon.contest2016;
 
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,11 +37,11 @@ import java.util.stream.Collectors;
  */
 public class ThrowPotionLogic implements Logic {
 
-    private final NPC<? extends LivingEntity> npc;
+    private final NPC npc;
 
     private int sincePotionThrown;
 
-    public ThrowPotionLogic(NPC<? extends LivingEntity> npc) {
+    public ThrowPotionLogic(NPC npc) {
         this.npc = npc;
     }
 
@@ -53,6 +53,10 @@ public class ThrowPotionLogic implements Logic {
     @Override
     public void execute() {
         sincePotionThrown = 0;
+
+        if (npc.getEntity().getTarget() != null) {
+            EntityUtil.look(npc.getEntity(), npc.getEntity().getTarget());
+        }
 
         List<ItemStack> potions = getPotions();
 
@@ -68,6 +72,18 @@ public class ThrowPotionLogic implements Logic {
     @Override
     public double getWeight() {
         if (sincePotionThrown < 1) {
+            return 0;
+        }
+
+        Entity target = npc.getEntity().getTarget();
+
+        if (target == null) {
+            return 0;
+        }
+
+        double distanceSq = target.getLocation().distanceSquared(npc.getEntity().getLocation());
+
+        if (distanceSq > Math.pow(5.5, 2)) {
             return 0;
         }
 

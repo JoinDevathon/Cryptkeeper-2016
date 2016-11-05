@@ -1,18 +1,18 @@
 /*
  * MIT License
- *
+ * 
  * Copyright (c) 2016
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,27 +23,33 @@
  */
 package org.devathon.contest2016;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Creature;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
+import gnu.trove.map.TObjectDoubleMap;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public interface NPC {
+public class SelectUtil {
 
-    void tick();
+    public static <T> T select(TObjectDoubleMap<T> map) {
+        if (map.size() > 0) {
+            double total = 0;
 
-    void spawn(Location location);
+            for (T key : map.keySet()) {
+                total += map.get(key);
+            }
 
-    void pickupItem(ItemStack itemStack);
+            double target = Math.random() * total;
 
-    Creature getEntity();
+            for (T key : map.keySet()) {
+                target -= map.get(key);
 
-    Location getLocation();
+                if (target <= 0) {
+                    return key;
+                }
+            }
+        }
 
-    List<ItemStack> getInventory();
+        return null;
+    }
 }
