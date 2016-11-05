@@ -23,13 +23,37 @@
  */
 package org.devathon.contest2016;
 
+import java.util.Collection;
+
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
 public class SelectUtil {
 
-    
+    public static <T extends WeightProvider> T select(Collection<T> collection) {
+        if (collection.size() == 0) {
+            return null;
+        }
+
+        double totalWeight = 0;
+
+        for (T provider : collection) {
+            totalWeight += provider.getWeight();
+        }
+
+        double selectWeight = Math.random() * totalWeight;
+
+        for (T provider : collection) {
+            selectWeight -= provider.getWeight();
+
+            if (selectWeight <= 0) {
+                return provider;
+            }
+        }
+
+        throw new RuntimeException("Failed to select!");
+    }
 
     // TODO: Weight randomed
 }

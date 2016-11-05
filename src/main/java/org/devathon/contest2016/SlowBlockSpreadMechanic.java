@@ -92,6 +92,18 @@ public class SlowBlockSpreadMechanic implements SpreadMechanic {
                 }
             }
 
+
+            Location location = source.clone();
+
+            location.setY(location.getWorld().getMaxHeight() - 1);
+
+                int xOffset2 = nextWithinRadius();
+                int zOffset2 = nextWithinRadius();
+
+                Location test = source.clone().add(xOffset2, 0, zOffset2); // TODO: Y shapes?
+
+                updateBlock(test);
+
             for (int y = 0; y > -10; y--) {
                 Location belowLocation = newLocation.clone().add(0, y, 0);
 

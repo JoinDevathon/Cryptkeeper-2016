@@ -28,7 +28,6 @@ import org.bukkit.Material;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -47,10 +46,13 @@ public class MaterialSelector implements Selector<Material> {
 
     @Override
     public Material select() {
-        // TODO: Weighted random
-        int index = ThreadLocalRandom.current().nextInt(pairs.size());
+        Pair pair = SelectUtil.select(pairs);
 
-        return pairs.get(index).material;
+        if (pair == null) {
+            return null;
+        } else {
+            return pair.material;
+        }
     }
 
     @Override
@@ -58,7 +60,7 @@ public class MaterialSelector implements Selector<Material> {
         return pairs.stream().map(pair -> pair.material).collect(Collectors.toList());
     }
 
-    private class Pair {
+    public class Pair implements WeightProvider {
 
         private final Material material;
         private final double weight;
@@ -66,6 +68,14 @@ public class MaterialSelector implements Selector<Material> {
         Pair(Material material, double weight) {
             this.material = material;
             this.weight = weight;
+        }
+
+        public Material getMaterial() {
+            return material;
+        }
+
+        public double getWeight() {
+            return weight;
         }
     }
 }

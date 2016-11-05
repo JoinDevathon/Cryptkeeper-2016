@@ -37,7 +37,8 @@ public class NetherMachine implements Machine {
 
     private final MaterialSelector materialSelector = new MaterialSelector()
             .pair(Material.NETHERRACK, 0.85D)
-            .pair(Material.SOUL_SAND, 0.15D);
+            .pair(Material.SOUL_SAND, 0.15D)
+            .pair(Material.GLOWSTONE, 0.01D);
 
     private final SpreadMechanic spreadMechanic;
 
