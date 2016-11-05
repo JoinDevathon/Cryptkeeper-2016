@@ -6,12 +6,8 @@ public class DevathonPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // put your enable code here
-    }
+        getServer().getPluginManager().registerEvents(new GenericListener(), this);
 
-    @Override
-    public void onDisable() {
-        // put your disable code here
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new MessageTask(), 2L, 2L);
     }
 }
-
