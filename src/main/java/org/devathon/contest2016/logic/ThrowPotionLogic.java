@@ -27,11 +27,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
-import org.devathon.contest2016.entity.npc.NPC;
+import org.devathon.contest2016.npc.NPC;
 import org.devathon.contest2016.util.EntityUtil;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -50,12 +49,12 @@ public class ThrowPotionLogic implements Logic {
 
     @Override
     public void tick() {
-        sincePotionThrown = Math.max(sincePotionThrown--, 0);
+        sincePotionThrown = Math.max(sincePotionThrown - 1, 0);
     }
 
     @Override
     public void execute() {
-        sincePotionThrown = (2 + ThreadLocalRandom.current().nextInt(3)) * 5;
+        sincePotionThrown = npc.getConfig().getPotionThrowDelay();
 
         if (npc.getTarget() != null) {
             EntityUtil.look(npc.getBukkitEntity(), npc.getTarget());

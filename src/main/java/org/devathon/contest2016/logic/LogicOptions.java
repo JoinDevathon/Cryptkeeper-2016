@@ -21,35 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.command;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.devathon.contest2016.DevathonPlugin;
-import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.logic.LogicOptions;
+package org.devathon.contest2016.logic;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class TestCommand implements CommandExecutor {
+public class LogicOptions {
 
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+    public static LogicOptions create() {
+        return new LogicOptions();
+    }
 
-            NPC npc = new NPC(() -> player, LogicOptions.create()
-                .simulatedCPS(20));
+    private String displayName = "Dummy";
+    private int simulatedCPS = 7;
+    private int potionThrowDelay = 15;
 
-            DevathonPlugin.getInstance().getNPCRegistry().register(npc);
+    private LogicOptions() {
+    }
 
-            npc.spawn(player.getLocation());
-        }
+    public LogicOptions displayName(String displayName) {
+        this.displayName = displayName;
 
-        return true;
+        return this;
+    }
+
+    public LogicOptions simulatedCPS(int simulatedCPS) {
+        this.simulatedCPS = simulatedCPS;
+
+        return this;
+    }
+
+    public LogicOptions potionThrowDelay(int potionThrowDelay) {
+        this.potionThrowDelay = potionThrowDelay;
+
+        return this;
+    }
+
+    public int getPotionThrowDelay() {
+        return potionThrowDelay;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public int getSimulatedCPS() {
+        return simulatedCPS;
     }
 }

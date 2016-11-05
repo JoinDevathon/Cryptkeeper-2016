@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.entity.npc;
+package org.devathon.contest2016.npc;
 
 import org.bukkit.Bukkit;
 import org.devathon.contest2016.DevathonPlugin;
@@ -38,7 +38,7 @@ public class NPCRegistry {
     private final List<NPC> npcs = new ArrayList<>();
 
     public void start() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(DevathonPlugin.getInstance(), this::tick, 2L, 2L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(DevathonPlugin.getInstance(), this::tick, 1L, 1L);
     }
 
     public void register(NPC npc) {
@@ -46,6 +46,22 @@ public class NPCRegistry {
     }
 
     private void tick() {
-        npcs.forEach(NPC::tick);
+        List<NPC> toRemove = null;
+
+        for (NPC npc : npcs) {
+            npc.tick();
+
+            if (!npc.isAlive()) {
+                if (toRemove == null) {
+                    toRemove = new ArrayList<>();
+                }
+
+                toRemove.add(npc);
+            }
+        }
+
+        if (toRemove != null) {
+            npcs.removeAll(toRemove);
+        }
     }
 }

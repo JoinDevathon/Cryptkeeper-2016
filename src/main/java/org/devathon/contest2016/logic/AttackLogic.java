@@ -24,7 +24,7 @@
 package org.devathon.contest2016.logic;
 
 import org.bukkit.entity.LivingEntity;
-import org.devathon.contest2016.entity.npc.NPC;
+import org.devathon.contest2016.npc.NPC;
 
 /**
  * @author Cryptkeeper
@@ -47,12 +47,12 @@ public class AttackLogic implements Logic {
 
     @Override
     public void execute() {
-        System.out.println("npc = " + npc);
+
     }
 
     @Override
     public double getWeight() {
-        if (ticksSinceAttack < 3) { // 7 CPS = 20/7 = ~2.8
+        if (ticksSinceAttack < (20 / (double) npc.getConfig().getSimulatedCPS())) {
             //return 0;
         }
 

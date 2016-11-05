@@ -62,7 +62,6 @@ public class EntityUtil {
         net.minecraft.server.v1_10_R1.Entity entityOther = ((CraftEntity) other).getHandle();
 
         if (entity instanceof EntityInsentient) {
-            System.out.println(entity + " looking at " + other);
             ((EntityInsentient) entity).getControllerLook().a(entityOther, 10.F, ((EntityInsentient) entity).N());
         }
     }

@@ -34,7 +34,7 @@ import org.devathon.contest2016.util.EntityUtil;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class FakeZombie extends EntityZombie implements FakeEntity {
+public class FakeZombie extends EntityZombie {
 
     static {
         EntityUtil.register(EntityType.ZOMBIE, FakeZombie.class);

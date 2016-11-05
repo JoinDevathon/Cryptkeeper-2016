@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.entity.npc;
+package org.devathon.contest2016.npc;
 
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -38,6 +38,7 @@ import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
 import org.devathon.contest2016.logic.AttackLogic;
 import org.devathon.contest2016.logic.Logic;
+import org.devathon.contest2016.logic.LogicOptions;
 import org.devathon.contest2016.logic.ThrowPotionLogic;
 import org.devathon.contest2016.util.ItemStackUtil;
 import org.devathon.contest2016.util.SelectUtil;
@@ -61,11 +62,14 @@ public class NPC {
 
     private final Supplier<Player> target;
     private final List<Logic> logics;
+    private final LogicOptions config;
 
     private FakeZombie entity;
 
-    public NPC(Supplier<Player> target) {
+    public NPC(Supplier<Player> target, LogicOptions config) {
         this.target = target;
+        this.config = config;
+
         this.logics = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this));
     }
 
@@ -90,9 +94,6 @@ public class NPC {
 
         Logic logic = SelectUtil.select(byWeight);
 
-        System.out.println("byWeight = " + byWeight);
-        System.out.println("logic = " + logic);
-
         if (logic != null) {
             logic.execute();
         }
@@ -111,11 +112,6 @@ public class NPC {
         entity.getEquipment().setArmorContents(new ItemStack[4]);
         entity.getEquipment().setItemInMainHand(null);
         entity.getEquipment().setItemInOffHand(null);
-
-        entity.getEquipment().setHelmetDropChance(1F);
-        entity.getEquipment().setChestplateDropChance(1F);
-        entity.getEquipment().setLeggingsDropChance(1F);
-        entity.getEquipment().setBootsDropChance(1F);
 
         for (int i = 0; i < 36; i++) {
             itemStacks.add(ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 20 * 10, 0))));
@@ -175,6 +171,10 @@ public class NPC {
 
     public List<ItemStack> getInventory() {
         return itemStacks;
+    }
+
+    public LogicOptions getConfig() {
+        return config;
     }
 
     public boolean isAlive() {
