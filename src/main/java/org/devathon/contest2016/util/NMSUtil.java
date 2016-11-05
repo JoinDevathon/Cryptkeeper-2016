@@ -24,6 +24,7 @@
 package org.devathon.contest2016.util;
 
 import net.minecraft.server.v1_10_R1.MethodProfiler;
+import net.minecraft.server.v1_10_R1.PlayerAbilities;
 import net.minecraft.server.v1_10_R1.World;
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 
@@ -34,12 +35,9 @@ import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 public class NMSUtil {
 
     public static final MethodProfiler METHOD_PROFILER = new MethodProfiler();
+    public static final PlayerAbilities PLAYER_ABILITIES = new PlayerAbilities();
 
     public static World getWorld(org.bukkit.World world) {
         return ((CraftWorld) world).getHandle();
-    }
-
-    public static MethodProfiler getMethodProfiler() {
-        return METHOD_PROFILER;
     }
 }

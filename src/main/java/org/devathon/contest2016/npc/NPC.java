@@ -25,7 +25,9 @@ package org.devathon.contest2016.npc;
 
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import net.minecraft.server.v1_10_R1.GenericAttributes;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -35,12 +37,14 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.devathon.contest2016.DevathonPlugin;
 import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
 import org.devathon.contest2016.logic.AttackLogic;
 import org.devathon.contest2016.logic.Logic;
 import org.devathon.contest2016.logic.ThrowPotionLogic;
 import org.devathon.contest2016.util.ItemStackUtil;
+import org.devathon.contest2016.util.NMSUtil;
 import org.devathon.contest2016.util.SelectUtil;
 
 import java.util.ArrayList;
@@ -102,17 +106,21 @@ public class NPC {
             if (entity instanceof Item) {
                 Item item = (Item) entity;
 
-                System.out.println(item);
+                if (item.getPickupDelay() <= 10) {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(DevathonPlugin.getInstance(), () -> {
+                        pickupItem(item.getItemStack());
+                    }, 20L);
 
-                pickupItem(item.getItemStack());
-
-                item.remove();
+                    item.remove();
+                }
             }
         }
     }
 
     public void spawn(Location location) {
         entity = new FakeZombie(location);
+
+        setSprinting(true); // TODO: Remove
 
         Zombie entity = getBukkitEntity();
 
@@ -135,6 +143,14 @@ public class NPC {
 
         updateWeapon();
         updateArmor();
+    }
+
+    public void setSprinting(boolean sprinting) {
+        double speed = sprinting ? 4 * 2;
+
+        speed *= NMSUtil.PLAYER_ABILITIES.walkSpeed;
+
+        entity.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(speed);
     }
 
     public FakeZombie getEntity() {
