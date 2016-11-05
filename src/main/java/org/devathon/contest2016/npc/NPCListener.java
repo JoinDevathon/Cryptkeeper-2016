@@ -41,8 +41,14 @@ public class NPCListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPotionSplash(EntityDamageByEntityEvent event) {
-        if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity()) && event.getDamager() instanceof ThrownPotion) {
-            System.out.println("zombie hurt");
+        if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity())) {
+            if (event.getDamager() instanceof ThrownPotion) {
+                event.setCancelled(true);
+
+                LivingEntity entity = ((LivingEntity) event.getEntity());
+
+                entity.setHealth(Math.min(entity.getMaxHealth(), entity.getHealth() + event.getDamage()));
+            }
         }
     }
 
