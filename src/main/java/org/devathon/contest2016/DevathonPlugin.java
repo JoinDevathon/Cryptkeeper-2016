@@ -9,6 +9,8 @@ public class DevathonPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        getServer().getPluginManager().registerEvents(new GenericListener(), this);
     }
 
     public static DevathonPlugin getInstance() {
