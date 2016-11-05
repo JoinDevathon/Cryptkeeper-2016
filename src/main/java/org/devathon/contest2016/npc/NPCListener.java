@@ -21,9 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.listener;
+package org.devathon.contest2016.npc;
 
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
+import org.devathon.contest2016.entity.FakeZombie;
 
 /**
  * @author Cryptkeeper
@@ -31,4 +37,19 @@ import org.bukkit.event.Listener;
  */
 public class NPCListener implements Listener {
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onPotionSplash(PotionSplashEvent event) {
+        
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (event.getEntity() instanceof FakeZombie) {
+            if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.MAGIC) {
+                event.setCancelled(true);
+
+                ((LivingEntity) event.getEntity()).damage(event.getAmount());
+            }
+        }
+    }
 }

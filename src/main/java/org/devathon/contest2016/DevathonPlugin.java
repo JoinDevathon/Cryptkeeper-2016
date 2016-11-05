@@ -2,6 +2,7 @@ package org.devathon.contest2016;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.devathon.contest2016.command.TestCommand;
+import org.devathon.contest2016.npc.NPCListener;
 import org.devathon.contest2016.npc.NPCRegistry;
 
 public class DevathonPlugin extends JavaPlugin {
@@ -17,6 +18,8 @@ public class DevathonPlugin extends JavaPlugin {
         registry.start();
 
         getCommand("test").setExecutor(new TestCommand());
+
+        getServer().getPluginManager().registerEvents(new NPCListener(), this);
     }
 
     public NPCRegistry getNPCRegistry() {

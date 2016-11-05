@@ -23,8 +23,13 @@
  */
 package org.devathon.contest2016.logic;
 
+import net.minecraft.server.v1_10_R1.EnumHand;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.devathon.contest2016.npc.NPC;
+import org.devathon.contest2016.npc.NPCOptions;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Cryptkeeper
@@ -47,7 +52,8 @@ public class AttackLogic implements Logic {
 
     @Override
     public void execute() {
-
+        npc.getEntity().a(EnumHand.MAIN_HAND);
+        npc.getEntity().B(((CraftLivingEntity) npc.getTarget()).getHandle());
     }
 
     @Override
@@ -62,7 +68,11 @@ public class AttackLogic implements Logic {
             return 0;
         }
 
-        if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(1.5, 2)) {
+        NPCOptions options = npc.getOptions();
+
+        double diff = ThreadLocalRandom.current().nextDouble(options.getHighReachDistance() - options.getLowReachDistance()) + options.getLowReachDistance();
+
+        if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(diff, 2)) {
             return Double.MAX_VALUE;
         }
 

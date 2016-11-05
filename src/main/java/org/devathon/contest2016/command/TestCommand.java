@@ -28,8 +28,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.devathon.contest2016.DevathonPlugin;
+import org.devathon.contest2016.npc.NPCOptions;
 import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.logic.LogicOptions;
 
 /**
  * @author Cryptkeeper
@@ -42,12 +42,12 @@ public class TestCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
-            NPC npc = new NPC(() -> player, LogicOptions.create()
+            NPC npc = new NPC(() -> player, NPCOptions.create()
                 .simulatedCPS(20));
 
-            DevathonPlugin.getInstance().getNPCRegistry().register(npc);
-
             npc.spawn(player.getLocation());
+
+            DevathonPlugin.getInstance().getNPCRegistry().register(npc);
         }
 
         return true;

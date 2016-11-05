@@ -37,7 +37,6 @@ import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
 import org.devathon.contest2016.logic.AttackLogic;
 import org.devathon.contest2016.logic.Logic;
-import org.devathon.contest2016.logic.LogicOptions;
 import org.devathon.contest2016.logic.ThrowPotionLogic;
 import org.devathon.contest2016.util.ItemStackUtil;
 import org.devathon.contest2016.util.SelectUtil;
@@ -61,11 +60,11 @@ public class NPC {
 
     private final Supplier<Player> target;
     private final List<Logic> logics;
-    private final LogicOptions options;
+    private final NPCOptions options;
 
     private FakeZombie entity;
 
-    public NPC(Supplier<Player> target, LogicOptions options) {
+    public NPC(Supplier<Player> target, NPCOptions options) {
         this.target = target;
         this.options = options;
 
@@ -172,7 +171,7 @@ public class NPC {
         return itemStacks;
     }
 
-    public LogicOptions getOptions() {
+    public NPCOptions getOptions() {
         return options;
     }
 

@@ -24,8 +24,6 @@
 package org.devathon.contest2016.entity;
 
 import net.minecraft.server.v1_10_R1.EntityLiving;
-import net.minecraft.server.v1_10_R1.EntityZombie;
-import net.minecraft.server.v1_10_R1.EnumHand;
 import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
 
 /**
@@ -34,44 +32,11 @@ import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
  */
 public class PathfinderTest extends PathfinderGoalMeleeAttack {
 
-    private final EntityZombie h;
-    private int i;
-
-    public PathfinderTest(EntityZombie var1, double var2, boolean var4) {
-        super(var1, var2, var4);
-        this.h = var1;
-    }
-
-    public void c() {
-        super.c();
-        this.i = 0;
-    }
-
-    public void d() {
-        super.d();
-        this.h.a(false);
-
-    }
-
-    public void e() {
-        super.e();
-        ++this.i;
-        if(this.i >= 5 && this.c < 10) {
-            this.h.a(true);
-        } else {
-            this.h.a(false);
-        }
-
+    public PathfinderTest(FakeZombie npc, double var2, boolean var4) {
+        super(npc, var2, var4);
     }
 
     @Override
     protected void a(EntityLiving var1, double var2) {
-        double var4 = this.a(var1);
-        if(var2 <= var4 && this.c <= 0) {
-            this.c = 20;
-            this.b.a(EnumHand.MAIN_HAND);
-            this.b.B(var1);
-        }
-
     }
 }

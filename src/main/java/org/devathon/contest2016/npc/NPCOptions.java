@@ -21,45 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.logic;
+package org.devathon.contest2016.npc;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class LogicOptions {
+public class NPCOptions {
 
-    public static LogicOptions create() {
-        return new LogicOptions();
+    public static NPCOptions create() {
+        return new NPCOptions();
     }
 
     private String displayName = "Dummy";
     private int simulatedCPS = 7;
     private int potionThrowDelay = 15;
     private double attackDamage = 3;
+    private double lowReachDistance = 1.5;
+    private double highReachDistance = 4;
 
-    private LogicOptions() {
+    private NPCOptions() {
     }
 
-    public LogicOptions attackDamage(double attackDamage) {
+    public NPCOptions lowReachDistance(double lowReachDistance) {
+        this.lowReachDistance = lowReachDistance;
+
+        return this;
+    }
+
+    public NPCOptions highReachDistance(double highReachDistance) {
+        this.highReachDistance = highReachDistance;
+
+        return this;
+    }
+
+    public NPCOptions attackDamage(double attackDamage) {
         this.attackDamage = attackDamage;
 
         return this;
     }
 
-    public LogicOptions displayName(String displayName) {
+    public NPCOptions displayName(String displayName) {
         this.displayName = displayName;
 
         return this;
     }
 
-    public LogicOptions simulatedCPS(int simulatedCPS) {
+    public NPCOptions simulatedCPS(int simulatedCPS) {
         this.simulatedCPS = simulatedCPS;
 
         return this;
     }
 
-    public LogicOptions potionThrowDelay(int potionThrowDelay) {
+    public NPCOptions potionThrowDelay(int potionThrowDelay) {
         this.potionThrowDelay = potionThrowDelay;
 
         return this;
@@ -79,5 +93,13 @@ public class LogicOptions {
 
     public int getSimulatedCPS() {
         return simulatedCPS;
+    }
+
+    public double getLowReachDistance() {
+        return lowReachDistance;
+    }
+
+    public double getHighReachDistance() {
+        return highReachDistance;
     }
 }
