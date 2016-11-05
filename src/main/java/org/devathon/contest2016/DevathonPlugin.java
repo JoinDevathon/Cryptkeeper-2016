@@ -9,6 +9,8 @@ public class DevathonPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        getCommand("test").setExecutor(new TestCommand());
     }
 
     public static DevathonPlugin getInstance() {

@@ -4,3 +4,8 @@ version: 1.0.0
 author: Cryptkeeper
 
 main: org.devathon.contest2016.DevathonPlugin
+
+commands:
+  test:
+    usage: /test
+    description: Test
