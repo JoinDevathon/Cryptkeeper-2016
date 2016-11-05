@@ -23,23 +23,42 @@
  */
 package org.devathon.contest2016;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class Scene {
+public class BlockChange implements Change {
 
-    private final List<Change> changes = new ArrayList<>();
+    private final Block block;
 
-    public void executeAll() {
-        changes.forEach(Change::apply);
-        changes.clear();
+    private final BlockState before;
+    private final BlockState after;
+
+    public BlockChange(Block block, BlockState before, BlockState after) {
+        this.block = block;
+        this.before = before;
+        this.after = after;
     }
 
-    public List<Change> getChanges() {
-        return changes;
+    @Override
+    public void apply() {
+        block.setTypeIdAndData(after.getTypeId(), after.getRawData(), false);
+    }
+
+    @Override
+    public void revert() {
+        block.setTypeIdAndData(before.getTypeId(), before.getRawData(), false);
+    }
+
+    @Override
+    public String toString() {
+        return "BlockChange{" +
+                "block=" + block +
+                ", before=" + before +
+                ", after=" + after +
+                '}';
     }
 }

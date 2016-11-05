@@ -28,8 +28,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import java.util.function.Supplier;
-
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
@@ -38,20 +36,23 @@ public class AnimationListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        recordChange(event.getPlayer(), () -> {
-            return () -> {
+        Change change = new BlockChange(event.getBlock(), event.getBlock().getState(), event.getBlockReplacedState());
 
-            };
+        recordChange(event.getPlayer(), change, () -> {
+            event.setCancelled(true);
+            event.setBuild(true);
         });
     }
 
-    private void recordChange(Player player, Supplier<Runnable> supplier) {
+    private void recordChange(Player player, Change change, Runnable runnable) {
         AnimationManager.State state = AnimationManager.getInstance().get(player);
 
         if (state.isRecording()) {
             Scene scene = state.getCurrentScene();
 
-            scene.getChanges().add(supplier.get());
+            runnable.run();
+
+            scene.getChanges().add(change);
         }
     }
 }

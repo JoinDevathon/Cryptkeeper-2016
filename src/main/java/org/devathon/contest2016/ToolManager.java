@@ -25,6 +25,8 @@ package org.devathon.contest2016;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 
 import java.util.Arrays;
@@ -47,7 +49,11 @@ public class ToolManager {
             new ConsumerTool(ChatColor.RED + "Stop Recording", new Wool(DyeColor.RED).toItemStack(1), state -> state.setRecording(false)),
             new ConsumerTool(ChatColor.RED + "< Previous Scene", new Wool(DyeColor.LIGHT_BLUE).toItemStack(1), state -> state.modScene(-1)),
             new ConsumerTool(ChatColor.GREEN + "Next Scene >", new Wool(DyeColor.LIGHT_BLUE).toItemStack(1), state -> state.modScene(1)),
-            new ConsumerTool(ChatColor.RED + "X Delete Scene", new Wool(DyeColor.BLACK).toItemStack(1), AnimationManager.State::deleteScene)
+            new ConsumerTool(ChatColor.RED + "X Delete Scene", new Wool(DyeColor.BLACK).toItemStack(1), AnimationManager.State::deleteScene),
+            new ConsumerTool(ChatColor.GREEN + "+ Increase Tick Rate", new Wool(DyeColor.LIME).toItemStack(1), state -> state.modTickRate(1)),
+            new ConsumerTool(ChatColor.RED + "- Decrease Tick Rate", new Wool(DyeColor.RED).toItemStack(1), state -> state.modTickRate(-1)),
+            new ConsumerTool(ChatColor.GREEN + "Start Playing", new ItemStack(Material.STICK), AnimationManager.State::start),
+            new ConsumerTool(ChatColor.RED + "Stop Playing", new ItemStack(Material.STICK), AnimationManager.State::stop)
     );
 
     private ToolManager() {

@@ -38,11 +38,16 @@ public class MessageTask implements Runnable {
     public void run() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             // TODO: Only if enabled
-            AnimationManager.State state = AnimationManager.getInstance().get(player);
-            String message = state.getMessage();
 
-            if (message != null) {
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+            if (!player.isSneaking()) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
+            } else {
+                AnimationManager.State state = AnimationManager.getInstance().get(player);
+                String message = state.getMessage();
+
+                if (message != null) {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+                }
             }
         }
     }

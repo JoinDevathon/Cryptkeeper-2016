@@ -30,10 +30,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Cryptkeeper
@@ -41,17 +45,40 @@ import java.util.List;
  */
 public class GenericListener implements Listener {
 
+    private final Map<UUID, ItemStack[]> previousInventories = new HashMap<>();
+    // TODO: Clear on kick/quit
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        List<Tool> tools = ToolManager.getInstance().getTools();
-
-        // Clean up the Player, since we're not in a normal environment.
-        // TODO: Only if enabled
         event.getPlayer().getInventory().clear();
+    }
 
-        tools.stream().map(Tool::toItemStack).forEach(itemStack -> {
-                    event.getPlayer().getInventory().addItem(itemStack);
-                });
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+        if (event.getPlayer().isFlying()) return;
+        // TODO: Only if enabled
+
+        if (event.isSneaking()) {
+            ItemStack[] itemStacks = event.getPlayer().getInventory().getContents();
+
+            previousInventories.put(event.getPlayer().getUniqueId(), itemStacks);
+
+            event.getPlayer().getInventory().clear();
+
+            List<Tool> tools = ToolManager.getInstance().getTools();
+
+            tools.stream().map(Tool::toItemStack).forEach(itemStack -> {
+                event.getPlayer().getInventory().addItem(itemStack);
+            });
+
+            event.getPlayer().updateInventory();
+        } else {
+            ItemStack[] itemStacks = previousInventories.remove(event.getPlayer().getUniqueId());
+
+            event.getPlayer().getInventory().clear();
+            event.getPlayer().getInventory().setContents(itemStacks);
+            event.getPlayer().updateInventory();
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)

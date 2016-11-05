@@ -23,6 +23,7 @@
  */
 package org.devathon.contest2016;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -61,7 +62,12 @@ public class AnimationManager {
 
         private int currentSceneIndex;
         private boolean isRecording;
+        private long tickRate = 5L;
+
         private int blinkState;
+
+        private int runningTaskId = -1;
+        private int runningSceneId;
 
         private State(UUID uuid) {
             this.uuid = uuid;
@@ -70,7 +76,57 @@ public class AnimationManager {
             this.scenes.add(new Scene());
         }
 
+        public void start() {
+            if (!isPlaying()) {
+                runningTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(DevathonPlugin.getInstance(), () -> {
+                    System.out.println("runningSceneId = " + runningSceneId);
+
+                    runningSceneId += 1;
+
+                    if (runningSceneId >= scenes.size()) {
+                        System.out.println("reset " + runningSceneId);
+
+                        stop();
+
+                        return;
+                    }
+
+                    /*
+                    if (runningSceneId > 0) {
+                        Scene lastScene = scenes.get(runningSceneId - 1);
+
+                        //lastScene.getChanges().forEach(Change::apply);
+                    }
+                     */
+
+                    Scene scene = scenes.get(runningSceneId);
+
+                    scene.getChanges().forEach(Change::apply);
+                }, tickRate / 2, tickRate);
+            }
+        }
+
+        public void stop() {
+            if (isPlaying()) {
+                Bukkit.getScheduler().cancelTask(runningTaskId);
+
+                runningTaskId = -1;
+
+                if (runningSceneId < scenes.size()) {
+                    Scene currentScene = scenes.get(runningSceneId);
+
+                    currentScene.getChanges().forEach(Change::revert);
+                }
+
+                runningSceneId = 0; //
+            }
+        }
+
         public void deleteScene() {
+            if (isPlaying()) {
+                return;
+            }
+
             if (scenes.size() > 1) {
                 scenes.remove(currentSceneIndex);
 
@@ -85,6 +141,10 @@ public class AnimationManager {
                 throw new IllegalArgumentException("mod can only be -1, 1");
             }
 
+            if (isPlaying()) {
+                return;
+            }
+
             currentSceneIndex = Math.max(currentSceneIndex + mod, 0);
 
             if (currentSceneIndex >= scenes.size()) {
@@ -92,12 +152,27 @@ public class AnimationManager {
             }
         }
 
+        public void modTickRate(long mod) {
+            if (!isPlaying()) {
+                tickRate = Math.max(tickRate += mod, 1L);
+                tickRate = Math.min(tickRate, 20L);
+            }
+        }
+
         public void setRecording(boolean recording) {
             isRecording = recording;
         }
 
+        public long getTickRate() {
+            return tickRate;
+        }
+
         public boolean isRecording() {
             return isRecording;
+        }
+
+        public boolean isPlaying() {
+            return runningTaskId != -1;
         }
 
         public Scene getCurrentScene() {
@@ -105,10 +180,11 @@ public class AnimationManager {
         }
 
         public String getMessage() {
-            String message = "Current Scene: " +
-                    (currentSceneIndex + 1) +
-                    "/" +
-                    scenes.size();
+            String message = "";
+
+            message += "Current Scene: " + (currentSceneIndex + 1) + "/" + scenes.size();
+            message += " - ";
+            message += "Tick Rate: " + tickRate + "/20";
 
             if (isRecording) {
                 message += " - ";
