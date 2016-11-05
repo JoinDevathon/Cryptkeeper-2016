@@ -29,5 +29,9 @@ package org.devathon.contest2016;
  */
 public interface Logic {
 
-    void tick(NPC npc);
+    void tick();
+
+    void execute();
+
+    double getWeight();
 }

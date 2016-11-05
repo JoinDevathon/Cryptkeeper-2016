@@ -31,6 +31,85 @@ import org.bukkit.Material;
  */
 public class ItemStackUtil {
 
+    public static double getGenericDefense(ArmorCategory category, Material material) {
+        switch (category) {
+            case HELMET:
+                switch (material) {
+                    case LEATHER_HELMET:
+                        return 1;
+                    case GOLD_HELMET:
+                    case CHAINMAIL_HELMET:
+                    case IRON_HELMET:
+                        return 2;
+                    case DIAMOND_HELMET:
+                        return 3;
+
+                    default:
+                        return 0;
+                }
+
+            case CHESTPLATE:
+                switch (material) {
+                    case LEATHER_CHESTPLATE:
+                        return 3;
+                    case GOLD_CHESTPLATE:
+                    case CHAINMAIL_CHESTPLATE:
+                        return 5;
+                    case IRON_CHESTPLATE:
+                        return 6;
+                    case DIAMOND_CHESTPLATE:
+                        return 8;
+
+                    default:
+                        return 0;
+                }
+
+            case LEGGINGS:
+                switch (material) {
+                    case LEATHER_LEGGINGS:
+                        return 2;
+                    case GOLD_LEGGINGS:
+                        return 3;
+                    case CHAINMAIL_LEGGINGS:
+                        return 4;
+                    case IRON_LEGGINGS:
+                        return 5;
+                    case DIAMOND_LEGGINGS:
+                        return 6;
+
+                    default:
+                        return 0;
+                }
+
+            case BOOTS:
+                switch (material) {
+                    case LEATHER_BOOTS:
+                    case CHAINMAIL_BOOTS:
+                    case GOLD_BOOTS:
+                        return 1;
+                    case IRON_BOOTS:
+                        return 2;
+                    case DIAMOND_BOOTS:
+                        return 3;
+
+                    default:
+                        return 0;
+                }
+
+            case SHIELD:
+                switch (material) {
+                    case SHIELD:
+                        return 1;
+
+                    default:
+                        return 0;
+                }
+
+            default:
+                return 0;
+        }
+    }
+
     public static double getGenericAttackDamage(Material material) {
         switch (material) {
             case WOOD_SWORD:
