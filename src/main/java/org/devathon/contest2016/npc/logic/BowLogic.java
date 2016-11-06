@@ -21,76 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.logic;
+package org.devathon.contest2016.npc.logic;
 
-import net.minecraft.server.v1_10_R1.EnumHand;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.util.Vector;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.npc.NPCOptions;
-
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import org.devathon.contest2016.util.EntityUtil;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class AttackLogic implements Logic {
+public class BowLogic implements Logic {
 
     private final NPC npc;
 
-    private int ticksSinceAttack;
-    private int currentRate;
-
-    public AttackLogic(NPC npc) {
+    public BowLogic(NPC npc) {
         this.npc = npc;
     }
 
     @Override
     public void tick() {
-        ticksSinceAttack = Math.max(ticksSinceAttack - 1, 0);
+
     }
 
     @Override
     public void execute() {
-        Random random = ThreadLocalRandom.current();
-
-        currentRate = random.nextInt(NPCOptions.MAX_CPS - NPCOptions.MIN_CPS) + NPCOptions.MIN_CPS;
-        ticksSinceAttack = (int) Math.round(20 / (double) currentRate);
-
-        npc.getEntity().a(EnumHand.MAIN_HAND);
-        npc.getEntity().B(((CraftLivingEntity) npc.getTarget()).getHandle());
-
-        if (npc.getBukkitEntity().isOnGround() && random.nextDouble() < NPCOptions.JUMP_CHANCE) {
-            npc.getBukkitEntity().setVelocity(new Vector(0, 0.45, 0));
-        }
+        EntityUtil.look(npc.getBukkitEntity(), npc.getTarget());
     }
 
     @Override
     public double getWeight(PatternMatrix.Event event) {
-        if (ticksSinceAttack > 0) {
+        if (npc.isWithinToTarget(10 * 10)) {
             return 0;
         }
 
-        LivingEntity target = npc.getTarget();
-
-        if (target == null) {
+        if (!hasArrows()) {
             return 0;
         }
 
-        double diff = ThreadLocalRandom.current().nextDouble(NPCOptions.HIGH_REACH_DISTANCE - NPCOptions.LOW_REACH_DISTANCE) + NPCOptions.LOW_REACH_DISTANCE;
+        return 0.5;
+    }
 
-        if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(diff, 2)) {
-            if (event == PatternMatrix.Event.ATTACK) {
-                return 1;
-            } else {
-                return 0.75;
+    private boolean hasArrows() {
+        for (ItemStack itemStack : npc.getInventory()) {
+            if (itemStack.getType() == Material.ARROW) {
+                return true;
             }
         }
 
-        return 0;
+        return false;
     }
 }

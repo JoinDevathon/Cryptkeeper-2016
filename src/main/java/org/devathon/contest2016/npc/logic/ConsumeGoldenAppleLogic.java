@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.logic;
+package org.devathon.contest2016.npc.logic;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

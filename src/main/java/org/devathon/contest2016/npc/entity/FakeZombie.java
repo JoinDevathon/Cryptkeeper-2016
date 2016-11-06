@@ -21,19 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.logic;
+package org.devathon.contest2016.npc.entity;
 
-import org.devathon.contest2016.learning.PatternMatrix;
+import net.minecraft.server.v1_10_R1.*;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
+import org.bukkit.entity.EntityType;
+import org.devathon.contest2016.util.EntityUtil;
+import org.devathon.contest2016.util.NMSUtil;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public interface Logic {
+public class FakeZombie extends EntityZombie {
 
-    void tick();
+    static {
+        EntityUtil.register(EntityType.ZOMBIE, FakeZombie.class);
+    }
 
-    void execute();
+    public FakeZombie(Location location) {
+        super(((CraftWorld) location.getWorld()).getHandle());
 
-    double getWeight(PatternMatrix.Event event);
+        setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        setBaby(false);
+        setVillagerType(EnumZombieType.NORMAL);
+
+        world.addEntity(this);
+    }
+
+    @Override
+    public void r() {
+        goalSelector = new PathfinderGoalSelector(NMSUtil.METHOD_PROFILER);
+
+        goalSelector.a(0, new PathfinderGoalFloat(this));
+        goalSelector.a(1, new PathfinderGoalHarmlessAttack(this, 1D, false));
+    }
+
+    @Override
+    public boolean d(MobEffect mobeffect) {
+        return true;
+    }
 }

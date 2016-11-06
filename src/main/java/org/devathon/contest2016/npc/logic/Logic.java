@@ -21,22 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.entity;
+package org.devathon.contest2016.npc.logic;
 
-import net.minecraft.server.v1_10_R1.EntityLiving;
-import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
+import org.devathon.contest2016.learning.PatternMatrix;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class PathfinderGoalHarmlessAttack extends PathfinderGoalMeleeAttack {
+public interface Logic {
 
-    public PathfinderGoalHarmlessAttack(FakeZombie npc, double var2, boolean var4) {
-        super(npc, var2, var4);
-    }
+    void tick();
 
-    @Override
-    protected void a(EntityLiving var1, double var2) {
-    }
+    void execute();
+
+    double getWeight(PatternMatrix.Event event);
 }

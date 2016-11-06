@@ -27,7 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
-import org.devathon.contest2016.data.ArmorCategory;
+import org.devathon.contest2016.npc.data.ArmorCategory;
 
 import java.util.List;
 

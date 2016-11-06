@@ -21,45 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.entity;
+package org.devathon.contest2016.npc.entity;
 
-import net.minecraft.server.v1_10_R1.*;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.entity.EntityType;
-import org.devathon.contest2016.util.EntityUtil;
-import org.devathon.contest2016.util.NMSUtil;
+import net.minecraft.server.v1_10_R1.EntityLiving;
+import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class FakeZombie extends EntityZombie {
+public class PathfinderGoalHarmlessAttack extends PathfinderGoalMeleeAttack {
 
-    static {
-        EntityUtil.register(EntityType.ZOMBIE, FakeZombie.class);
-    }
-
-    public FakeZombie(Location location) {
-        super(((CraftWorld) location.getWorld()).getHandle());
-
-        setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-        setBaby(false);
-        setVillagerType(EnumZombieType.NORMAL);
-
-        world.addEntity(this);
+    public PathfinderGoalHarmlessAttack(FakeZombie npc, double var2, boolean var4) {
+        super(npc, var2, var4);
     }
 
     @Override
-    public void r() {
-        goalSelector = new PathfinderGoalSelector(NMSUtil.METHOD_PROFILER);
-
-        goalSelector.a(0, new PathfinderGoalFloat(this));
-        goalSelector.a(1, new PathfinderGoalHarmlessAttack(this, 1D, false));
-    }
-
-    @Override
-    public boolean d(MobEffect mobeffect) {
-        return true;
+    protected void a(EntityLiving var1, double var2) {
     }
 }
