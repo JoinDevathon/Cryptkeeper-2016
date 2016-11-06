@@ -24,7 +24,7 @@
 package org.devathon.contest2016.npc.logic;
 
 import org.bukkit.inventory.ItemStack;
-import org.devathon.contest2016.npc.NPC;
+import org.devathon.contest2016.npc.NPCController;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,9 +36,9 @@ import java.util.List;
  */
 abstract class ConsumeLogic implements Logic {
 
-    protected final NPC npc;
+    protected final NPCController npc;
 
-    ConsumeLogic(NPC npc) {
+    ConsumeLogic(NPCController npc) {
         this.npc = npc;
     }
 

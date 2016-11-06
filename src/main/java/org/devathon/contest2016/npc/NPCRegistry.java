@@ -24,7 +24,6 @@
 package org.devathon.contest2016.npc;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.devathon.contest2016.Plugin;
@@ -47,23 +46,23 @@ public class NPCRegistry {
     private NPCRegistry() {
     }
 
-    private final List<NPC> npcs = new ArrayList<>();
+    private final List<NPCController> controllers = new ArrayList<>();
 
     public void start() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Plugin.getInstance(), this::tick, 1L, 1L);
     }
 
-    public void register(NPC npc) {
-        npcs.add(npc);
+    public void register(NPCController npc) {
+        controllers.add(npc);
     }
 
     private void tick() {
-        List<NPC> toRemove = null;
+        List<NPCController> toRemove = null;
 
-        for (NPC npc : npcs) {
+        for (NPCController npc : controllers) {
             Player target = npc.getTarget();
 
-            if (target == null || target.isDead()) {
+            if (target == null) {
                 if (toRemove == null) {
                     toRemove = new ArrayList<>();
                 }
@@ -71,25 +70,23 @@ public class NPCRegistry {
                 toRemove.add(npc);
 
                 npc.destroy();
+            } else if (target.isDead()) {
+                npc.destroy();
+            } else if (npc.isAlive()) {
+                npc.tick();
             } else {
-                if (npc.isAlive()) {
-                    npc.tick();
-                } else {
-                    Location spawnLocation = Plugin.getInstance().getSpawnLocation(target.getWorld());
-
-                    npc.spawn(spawnLocation);
-                }
+                npc.attemptSpawn();
             }
         }
 
         if (toRemove != null) {
-            npcs.removeAll(toRemove);
+            controllers.removeAll(toRemove);
         }
     }
 
-    public boolean isRegistered(int entityId) {
-        for (NPC npc : npcs) {
-            if (npc.getBukkitEntity().getEntityId() == entityId) {
+    public boolean isController(int entityId) {
+        for (NPCController npc : controllers) {
+            if (npc.isAlive() && npc.getBukkitEntity().getEntityId() == entityId) {
                 return true;
             }
         }
@@ -97,7 +94,7 @@ public class NPCRegistry {
         return false;
     }
 
-    public boolean isRegistered(Entity entity) {
-        return isRegistered(entity.getEntityId());
+    public boolean isController(Entity entity) {
+        return isController(entity.getEntityId());
     }
 }

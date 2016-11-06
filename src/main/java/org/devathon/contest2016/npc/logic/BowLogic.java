@@ -26,7 +26,7 @@ package org.devathon.contest2016.npc.logic;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.devathon.contest2016.learning.PatternMatrix;
-import org.devathon.contest2016.npc.NPC;
+import org.devathon.contest2016.npc.NPCController;
 import org.devathon.contest2016.util.EntityUtil;
 
 /**
@@ -35,9 +35,9 @@ import org.devathon.contest2016.util.EntityUtil;
  */
 public class BowLogic implements Logic {
 
-    private final NPC npc;
+    private final NPCController npc;
 
-    public BowLogic(NPC npc) {
+    public BowLogic(NPCController npc) {
         this.npc = npc;
     }
 

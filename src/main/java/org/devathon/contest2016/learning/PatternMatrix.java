@@ -55,38 +55,33 @@ public class PatternMatrix {
         return MATRIX_MAP.getUnchecked(uuid);
     }
 
-    private final List<Row> byRows = new ArrayList<>();
-
-    private Row currentRow;
+    private final List<List<Event>> byRows = new ArrayList<>();
+    private final List<Event> currentRow = new ArrayList<>();
 
     private PatternMatrix() {
     }
 
     public void push(Event event) {
-        if (currentRow == null) {
-            currentRow = new Row();
-        }
-
-        currentRow.events.add(event);
+        currentRow.add(event);
     }
 
     public void end() {
-        if (currentRow != null) {
+        if (currentRow.size() > 0) {
             if (byRows.size() >= 10) {
                 byRows.remove(0);
             }
 
-            byRows.add(currentRow);
+            byRows.add(new ArrayList<>(currentRow));
 
-            currentRow = new Row();
+            currentRow.clear();
         }
     }
 
     public Event getExpectedEvent() {
         int totalLength = 0;
 
-        for (Row row : byRows) {
-            totalLength += row.events.size();
+        for (List<Event> row : byRows) {
+            totalLength += row.size();
         }
 
         int averageLength = (int) (totalLength / (double) byRows.size());
@@ -96,9 +91,9 @@ public class PatternMatrix {
         for (int i = 0; i < averageLength; i++) {
             TObjectIntMap<Event> entry = new TObjectIntHashMap<>();
 
-            for (Row row : byRows) {
-                if (i < row.events.size()) {
-                    Event event = row.events.get(i);
+            for (List<Event> row : byRows) {
+                if (i < row.size()) {
+                    Event event = row.get(i);
 
                     if (!entry.increment(event)) {
                         entry.put(event, 1);
@@ -117,11 +112,11 @@ public class PatternMatrix {
             averages.add(event);
         }
 
-        if (currentRow == null) {
+        if (currentRow.size() == 0) {
             return null;
         }
 
-        int index = currentRow.events.size();
+        int index = currentRow.size();
 
         if (index < averages.size()) {
             return averages.get(index);
@@ -139,6 +134,8 @@ public class PatternMatrix {
         public Event flip() {
             switch (this) {
                 case ATTACK:
+                    return THROW_POTION;
+
                 case THROW_POTION:
                     return CONSUME_GOLDEN_APPLE;
 
@@ -149,10 +146,5 @@ public class PatternMatrix {
                     throw new IllegalArgumentException(name());
             }
         }
-    }
-
-    private class Row {
-
-        private final List<Event> events = new ArrayList<>();
     }
 }

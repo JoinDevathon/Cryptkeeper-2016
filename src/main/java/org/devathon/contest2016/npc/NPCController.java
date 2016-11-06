@@ -35,7 +35,9 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.devathon.contest2016.Options;
 import org.devathon.contest2016.Plugin;
+import org.devathon.contest2016.Point;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.data.ArmorCategory;
 import org.devathon.contest2016.npc.entity.FakeZombie;
@@ -60,7 +62,7 @@ import static org.devathon.contest2016.util.ItemStackUtil.getGenericDefense;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class NPC {
+public class NPCController {
 
     private final List<ItemStack> itemStacks = new ArrayList<>();
     private final List<ItemStack> pendingPickups = new ArrayList<>();
@@ -68,12 +70,14 @@ public class NPC {
     private final List<Logic> logicHandlers = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this), new GoldenAppleLogic(this));
 
     private final UUID target;
+    private final Point point;
 
     private int ticksTilOverride;
     private FakeZombie entity;
 
-    public NPC(UUID target) {
+    public NPCController(UUID target, Point point) {
         this.target = target;
+        this.point = point;
     }
 
     public void tick() {
@@ -86,19 +90,28 @@ public class NPC {
         updateNameTag();
     }
 
-    public void spawn(Location location) {
-        entity = new FakeZombie(location);
+    public void attemptSpawn() {
+        if (point.attemptSpawn()) {
+            Player target = getTarget();
 
-        Zombie entity = getBukkitEntity();
+            Location location = point.toLocation(target.getWorld());
 
-        entity.setCanPickupItems(false);
-        entity.setCustomNameVisible(true);
+            entity = new FakeZombie(location);
 
-        EntityUtil.reset(entity);
+            Zombie entity = getBukkitEntity();
 
-        itemStacks.addAll(Plugin.getInstance().getKitItems());
+            entity.setCanPickupItems(false);
+            entity.setCustomNameVisible(true);
 
-        tick();
+            EntityUtil.reset(entity);
+
+            Options.KIT_ITEMS.forEach(itemStack -> itemStacks.add(itemStack.clone()));
+
+            // TODO: Messages
+
+            updateEquipment();
+            tick();
+        }
     }
 
     public void destroy() {
@@ -171,7 +184,7 @@ public class NPC {
     }
 
     private void updateSpeed() {
-        if (!isWithinToTarget(Math.pow(NPCOptions.SPRINT_DISTANCE, 2))) {
+        if (!isWithinToTarget(Math.pow(Options.SPRINT_DISTANCE, 2))) {
             setSprinting(true);
         } else {
             Player target = getTarget();
@@ -189,7 +202,7 @@ public class NPC {
     }
 
     public void setSprinting(boolean sprinting) {
-        double speed = sprinting ? NPCOptions.SPRINT_SPEED : NPCOptions.WALK_SPEED;
+        double speed = sprinting ? Options.SPRINT_SPEED : Options.WALK_SPEED;
 
         speed *= NMSUtil.PLAYER_ABILITIES.walkSpeed;
 
@@ -249,7 +262,7 @@ public class NPC {
     }
 
     public boolean isAlive() {
-        return entity.isAlive();
+        return entity != null && entity.isAlive();
     }
 
     public boolean isWithinToTarget(double distanceSq) {

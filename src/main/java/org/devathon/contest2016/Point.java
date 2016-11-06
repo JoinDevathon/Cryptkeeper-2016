@@ -21,31 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.npc;
+package org.devathon.contest2016;
+
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class NPCOptions {
+public class Point {
 
-    public static final int MIN_CPS = 2;
-    public static final int MAX_CPS = 8;
+    private final Vector vector;
 
-    public static final int POTION_THROW_DELAY = 60;
+    private int spawnDelay = 2 * 20;
 
-    public static final double LOW_REACH_DISTANCE = 1.5;
-    public static final double HIGH_REACH_DISTANCE = 3;
+    public Point(Location location) {
+        this.vector = location.toVector();
+    }
 
-    public static final double SPRINT_DISTANCE = 5;
+    public Location toLocation(World world) {
+        return vector.toLocation(world);
+    }
 
-    public static final double WALK_SPEED = 2.75;
-    public static final double SPRINT_SPEED = 3.75;
+    public boolean attemptSpawn() {
+        spawnDelay--;
 
-    public static final int CONSUME_ITEM_DELAY = 100;
+        if (spawnDelay <= 0) {
+            spawnDelay = 3 * 20;
 
-    public static final double JUMP_CHANCE = 0.75;
+            return true;
+        }
 
-    private NPCOptions() {
+        return false;
     }
 }

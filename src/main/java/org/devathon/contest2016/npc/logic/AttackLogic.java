@@ -28,8 +28,8 @@ import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 import org.devathon.contest2016.learning.PatternMatrix;
-import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.npc.NPCOptions;
+import org.devathon.contest2016.npc.NPCController;
+import org.devathon.contest2016.Options;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -42,12 +42,12 @@ public class AttackLogic implements Logic {
 
     private final Vector JUMP_VECTOR = new Vector(0, 0.45, 0);
 
-    private final NPC npc;
+    private final NPCController npc;
 
     private int ticksSinceAttack;
     private int currentRate;
 
-    public AttackLogic(NPC npc) {
+    public AttackLogic(NPCController npc) {
         this.npc = npc;
     }
 
@@ -60,13 +60,13 @@ public class AttackLogic implements Logic {
     public void execute() {
         Random random = ThreadLocalRandom.current();
 
-        currentRate = random.nextInt(NPCOptions.MAX_CPS - NPCOptions.MIN_CPS) + NPCOptions.MIN_CPS;
+        currentRate = random.nextInt(Options.MAX_CPS - Options.MIN_CPS) + Options.MIN_CPS;
         ticksSinceAttack = (int) Math.round(20 / (double) currentRate);
 
         npc.getEntity().a(EnumHand.MAIN_HAND);
         npc.getEntity().B(((CraftLivingEntity) npc.getTarget()).getHandle());
 
-        if (npc.getBukkitEntity().isOnGround() && random.nextDouble() < NPCOptions.JUMP_CHANCE) {
+        if (npc.getBukkitEntity().isOnGround() && random.nextDouble() < Options.JUMP_CHANCE) {
             npc.getBukkitEntity().setVelocity(JUMP_VECTOR);
         }
     }
@@ -83,7 +83,7 @@ public class AttackLogic implements Logic {
             return 0;
         }
 
-        double diff = ThreadLocalRandom.current().nextDouble(NPCOptions.HIGH_REACH_DISTANCE - NPCOptions.LOW_REACH_DISTANCE) + NPCOptions.LOW_REACH_DISTANCE;
+        double diff = ThreadLocalRandom.current().nextDouble(Options.HIGH_REACH_DISTANCE - Options.LOW_REACH_DISTANCE) + Options.LOW_REACH_DISTANCE;
 
         if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(diff, 2)) {
             if (event == PatternMatrix.Event.ATTACK) {

@@ -25,6 +25,7 @@ package org.devathon.contest2016.util;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.devathon.contest2016.npc.data.ArmorCategory;
@@ -36,6 +37,18 @@ import java.util.List;
  * @since 05.11.2016
  */
 public class ItemStackUtil {
+
+    public static ItemStack makeCustomItemStack(Material material, String displayName) {
+        ItemStack itemStack = new ItemStack(material);
+
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        itemMeta.setDisplayName(displayName);
+
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
 
     public static ItemStack makeSplashPotion(Material material, List<PotionEffect> effects) {
         ItemStack itemStack = new ItemStack(material);

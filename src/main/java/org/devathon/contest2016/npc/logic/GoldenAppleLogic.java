@@ -28,9 +28,10 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.devathon.contest2016.Options;
 import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.learning.PatternMatrix;
-import org.devathon.contest2016.npc.NPC;
+import org.devathon.contest2016.npc.NPCController;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class GoldenAppleLogic extends ConsumeLogic {
 
     private int sinceConsumeItem;
 
-    public GoldenAppleLogic(NPC npc) {
+    public GoldenAppleLogic(NPCController npc) {
         super(npc);
     }
 
@@ -53,6 +54,8 @@ public class GoldenAppleLogic extends ConsumeLogic {
 
     @Override
     protected void _execute(ItemStack itemStack) {
+        sinceConsumeItem = Options.CONSUME_ITEM_DELAY;
+
         npc.getBukkitEntity().getEquipment().setItemInMainHand(itemStack);
 
         npc.getBukkitEntity().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2 * 60 * 20, 0));

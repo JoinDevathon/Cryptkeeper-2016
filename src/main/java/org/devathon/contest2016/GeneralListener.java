@@ -23,13 +23,30 @@
  */
 package org.devathon.contest2016;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.devathon.contest2016.npc.NPCController;
+import org.devathon.contest2016.npc.NPCRegistry;
+import org.devathon.contest2016.util.ItemStackUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Cryptkeeper
@@ -37,12 +54,18 @@ import org.bukkit.inventory.ItemStack;
  */
 public class GeneralListener implements Listener {
 
+    private final Map<UUID, Location> respawnLocations = new HashMap<>();
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().setHealth(event.getPlayer().getMaxHealth());
-        event.getPlayer().setFoodLevel(20);
-        event.getPlayer().getInventory().clear();
-        event.getPlayer().getEquipment().setArmorContents(new ItemStack[4]);
+        Player player = event.getPlayer();
+
+        reset(player);
+
+        ItemStack machineItem = ItemStackUtil.makeCustomItemStack(Material.IRON_BLOCK, ChatColor.LIGHT_PURPLE + "The Hell Machine " + ChatColor.GRAY + "(Right Click to Place)");
+
+        player.getInventory().addItem(machineItem);
+        player.setGameMode(GameMode.SURVIVAL);
     }
 
     @EventHandler
@@ -59,5 +82,92 @@ public class GeneralListener implements Listener {
     @EventHandler
     public void onThunderChange(ThunderChangeEvent event) {
         event.setCancelled(event.toThunderState());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        respawnLocations.put(event.getEntity().getUniqueId(), event.getEntity().getLocation());
+
+        event.setDeathMessage(null);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDeath(EntityDeathEvent event) {
+        event.setDroppedExp(0);
+        event.getDrops().clear();
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+
+        Location location = respawnLocations.remove(player.getUniqueId());
+
+        if (location != null) {
+            event.setRespawnLocation(location);
+
+            reset(player);
+
+            Options.KIT_ITEMS.forEach(itemStack -> player.getInventory().addItem(itemStack.clone()));
+
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.YELLOW + "You breathe again..."));
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        // We'll just assume it's our custom ItemStack.
+        if (event.getBlock().getType() == Material.IRON_BLOCK) {
+            int size = Options.ARENA_SIZE;
+
+            Location location = event.getBlock().getLocation();
+
+            // Set our Y to where we won't collide with anything.
+            location.setY(location.getWorld().getHighestBlockYAt(location));
+
+            for (int x = -size / 2; x <= size / 2; x++) {
+                for (int z = -size / 2; z <= size / 2; z++) {
+                    int maxY = (x == -size / 2 || z == -size / 2 || x == size / 2 || z == size / 2) ? 5 : 1;
+
+                    for (int y = 0; y < maxY; y++) {
+                        Block block = location.clone().add(x, y, z).getBlock();
+
+                        if (y == 0) {
+                            block.setType(Material.NETHERRACK);
+                        } else {
+                            block.setType(Material.IRON_FENCE);
+                        }
+                    }
+                }
+            }
+
+            Player player = event.getPlayer();
+
+            player.getInventory().clear();
+            player.setGameMode(GameMode.ADVENTURE);
+            player.teleport(location.clone().add(5, 1, 0));
+
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.RED + "An arena appears..."));
+
+            Options.KIT_ITEMS.forEach(itemStack -> player.getInventory().addItem(itemStack.clone()));
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
+                Location spawnLocation = location.clone().add(0, 1, 0);
+
+                Point point = new Point(spawnLocation);
+                NPCController controller = new NPCController(player.getUniqueId(), point);
+
+                NPCRegistry.getInstance().register(controller);
+            });
+
+            event.setBuild(false);
+        }
+    }
+
+    private void reset(Player player) {
+        player.setHealth(player.getMaxHealth());
+        player.setFoodLevel(20);
+        player.getInventory().clear();
+        player.getEquipment().setArmorContents(new ItemStack[4]);
     }
 }

@@ -21,41 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.command;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.devathon.contest2016.Plugin;
-import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.npc.NPCRegistry;
+package org.devathon.contest2016.util;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class TestCommand implements CommandExecutor {
+public class MathUtil {
 
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-
-            player.getInventory().clear();
-
-            for (ItemStack itemStack : Plugin.getInstance().getKitItems()) {
-                player.getInventory().addItem(itemStack.clone());
-            }
-
-            NPC npc = new NPC(player.getUniqueId());
-
-            npc.spawn(player.getLocation().add(10, 0, 10));
-
-            NPCRegistry.getInstance().register(npc);
-        }
-
-        return true;
+    public static double flatDistanceSq(double x1, double z1, double x2, double z2) {
+        return ((x1 - x2) * (x1 - x2)) + ((z1 - z2) * (z1 - z2));
     }
 }

@@ -41,7 +41,7 @@ public class PatternListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (NPCRegistry.getInstance().isRegistered(event.getEntity())) {
+        if (NPCRegistry.getInstance().isController(event.getEntity())) {
             if (event.getDamager() instanceof Player) {
                 PatternMatrix state = PatternMatrix.of(event.getDamager().getUniqueId());
 

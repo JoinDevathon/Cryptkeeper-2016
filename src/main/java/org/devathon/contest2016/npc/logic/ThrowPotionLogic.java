@@ -28,8 +28,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
 import org.devathon.contest2016.learning.PatternMatrix;
-import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.npc.NPCOptions;
+import org.devathon.contest2016.npc.NPCController;
+import org.devathon.contest2016.Options;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class ThrowPotionLogic extends ConsumeLogic {
 
     private int sincePotionThrown;
 
-    public ThrowPotionLogic(NPC npc) {
+    public ThrowPotionLogic(NPCController npc) {
         super(npc);
     }
 
@@ -52,7 +52,7 @@ public class ThrowPotionLogic extends ConsumeLogic {
 
     @Override
     protected void _execute(ItemStack itemStack) {
-        sincePotionThrown = NPCOptions.POTION_THROW_DELAY;
+        sincePotionThrown = Options.POTION_THROW_DELAY;
 
         ThrownPotion thrownPotion = npc.getBukkitEntity().launchProjectile(ThrownPotion.class);
 
