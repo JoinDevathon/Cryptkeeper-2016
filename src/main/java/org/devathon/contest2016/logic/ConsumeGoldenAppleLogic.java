@@ -76,8 +76,10 @@ public class ConsumeGoldenAppleLogic implements Logic {
         npc.setFrozen(true);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
-            npc.updateWeapon();
-            npc.setFrozen(false);
+            if (npc.isAlive()) {
+                npc.updateWeapon();
+                npc.setFrozen(false);
+            }
         }, 30L);
     }
 
