@@ -29,6 +29,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.devathon.contest2016.npc.NPCRegistry;
@@ -70,5 +71,12 @@ public class EventListener implements Listener {
 
             state.push(Event.ofNow(Event.Type.THROW_POTION));
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        PatternMatrix state = LearnManager.getInstance().get(event.getEntity());
+
+        state.end();
     }
 }
