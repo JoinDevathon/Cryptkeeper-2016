@@ -42,7 +42,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.devathon.contest2016.npc.NPCController;
 import org.devathon.contest2016.npc.NPCRegistry;
-import org.devathon.contest2016.npc.data.SpawnControl;
+import org.devathon.contest2016.data.SpawnControl;
 import org.devathon.contest2016.util.ItemStackUtil;
 
 import java.util.HashMap;
@@ -53,7 +53,7 @@ import java.util.UUID;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class GeneralListener implements Listener {
+public class WorldListener implements Listener {
 
     private final Map<UUID, Location> respawnLocations = new HashMap<>();
 

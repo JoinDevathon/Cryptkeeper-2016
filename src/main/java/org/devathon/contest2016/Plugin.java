@@ -17,7 +17,7 @@ public class Plugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PatternListener(), this);
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
-        getServer().getPluginManager().registerEvents(new GeneralListener(), this);
+        getServer().getPluginManager().registerEvents(new WorldListener(), this);
     }
 
     public static Plugin getInstance() {
