@@ -29,7 +29,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.devathon.contest2016.npc.NPCRegistry;
@@ -40,43 +39,5 @@ import org.devathon.contest2016.npc.NPCRegistry;
  */
 class EventListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
-            return;
-        }
-
-        if (!NPCRegistry.getInstance().isNPC(event.getEntity())) {
-            return;
-        }
-
-        PatternMatrix state = LearnManager.getInstance().get((Player) event.getDamager());
-
-        state.push(Event.ofNow(Event.Type.ATTACK));
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onItemConsume(PlayerItemConsumeEvent event) {
-        PatternMatrix state = LearnManager.getInstance().get(event.getPlayer());
-
-        state.push(Event.ofNow(Event.Type.CONSUME_GOLDEN_APPLE));
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onThrowPotion(ProjectileLaunchEvent event) {
-        if (event.getEntity() instanceof ThrownPotion && event.getEntity().getShooter() instanceof Player) {
-            Player shooter = (Player) event.getEntity().getShooter();
-
-            PatternMatrix state = LearnManager.getInstance().get(shooter);
-
-            state.push(Event.ofNow(Event.Type.THROW_POTION));
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        PatternMatrix state = LearnManager.getInstance().get(event.getEntity());
-
-        state.end();
-    }
+    
 }

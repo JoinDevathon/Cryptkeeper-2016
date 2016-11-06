@@ -24,12 +24,30 @@
 package org.devathon.contest2016.util;
 
 import gnu.trove.map.TObjectDoubleMap;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
 public class SelectUtil {
+
+    public static <T> T select(TObjectIntMap<T> map) {
+        TObjectDoubleMap<T> morph = new TObjectDoubleHashMap<>();
+
+        int total = 0;
+
+        for (T key : map.keySet()) {
+            total += map.get(key);
+        }
+
+        for (T key : map.keySet()) {
+            morph.put(key, map.get(key) / (double) total);
+        }
+
+        return select(morph);
+    }
 
     public static <T> T select(TObjectDoubleMap<T> map) {
         if (map.size() > 0) {

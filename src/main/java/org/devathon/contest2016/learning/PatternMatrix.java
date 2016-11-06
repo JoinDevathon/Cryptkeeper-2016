@@ -23,6 +23,10 @@
  */
 package org.devathon.contest2016.learning;
 
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+import org.devathon.contest2016.util.SelectUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,19 +36,97 @@ import java.util.List;
  */
 public class PatternMatrix {
 
-    private final List<List<Event>> events = new ArrayList<>();
-    private final List<Event> currentLine = new ArrayList<>();
+    private final List<List<Event>> byRows = new ArrayList<>();
+    private final List<Event> row = new ArrayList<>();
 
     PatternMatrix() {
     }
 
     public void push(Event event) {
-        currentLine.add(event);
+        row.add(event);
     }
 
     public void end() {
-        events.add(new ArrayList<>(currentLine));
+        if (row.size() > 0) {
+            byRows.add(new ArrayList<>(row));
 
-        currentLine.clear();
+            row.clear();
+        }
+    }
+
+    public Event flipCurrent() {
+        Event current = getCurrentAverage();
+
+        if (current != null) {
+            switch (current) {
+                case ATTACK:
+                case THROW_POTION:
+                    return Event.CONSUME_GOLDEN_APPLE;
+                case CONSUME_GOLDEN_APPLE:
+                    return Event.ATTACK;
+
+                default:
+                    throw new IllegalArgumentException(current.name());
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private Event getCurrentAverage() {
+        int totalLength = 0;
+
+        for (List<Event> row : byRows) {
+            totalLength += row.size();
+        }
+
+        int averageLength = (int) (totalLength / (double) byRows.size());
+
+        List<TObjectIntMap<Event>> byIndex = new ArrayList<>();
+
+        for (int i = 0; i < averageLength; i++) {
+            TObjectIntMap<Event> entry = new TObjectIntHashMap<>();
+
+            for (List<Event> list : byRows) {
+                if (i < list.size()) {
+                    Event event = list.get(i);
+
+                    if (!entry.increment(event)) {
+                        entry.put(event, 0);
+                    }
+                }
+            }
+
+            byIndex.add(entry);
+        }
+
+        List<Event> averages = new ArrayList<>();
+
+        for (TObjectIntMap<Event> entry : byIndex) {
+            Event event = SelectUtil.select(entry);
+
+            averages.add(event);
+        }
+
+        for (List<Event> list : byRows) {
+            System.out.println(list);
+        }
+
+        System.out.println("averages = " + averages);
+
+        int index = row.size();
+
+        if (index < averages.size()) {
+            return averages.get(index);
+        } else {
+            return null;
+        }
+    }
+
+    public enum Event {
+
+        THROW_POTION,
+        CONSUME_GOLDEN_APPLE,
+        ATTACK
     }
 }

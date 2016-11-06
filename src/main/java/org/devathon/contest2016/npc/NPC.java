@@ -36,10 +36,11 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.Hacks;
+import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
+import org.devathon.contest2016.learning.LearnManager;
 import org.devathon.contest2016.logic.AttackLogic;
 import org.devathon.contest2016.logic.ConsumeGoldenAppleLogic;
 import org.devathon.contest2016.logic.Logic;
@@ -70,6 +71,7 @@ public class NPC {
     private final NPCOptions options;
 
     private int ticksTilOverride = 10;
+    private int ticksLived;
 
     private FakeZombie entity;
 
@@ -145,6 +147,8 @@ public class NPC {
 
         updateSpeed();
         updateNameTag();
+
+        ticksLived += 1;
     }
 
     public void spawn(Location location) {
@@ -170,6 +174,8 @@ public class NPC {
 
     public void destroy() {
         entity.world.removeEntity(entity);
+
+        LearnManager.getInstance().get(target).end();
     }
 
     private void pickupItem(ItemStack itemStack) {
