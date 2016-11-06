@@ -44,6 +44,8 @@ public class NPCOptions {
 
     public static final int CONSUME_ITEM_DELAY = 100;
 
+    public static final double JUMP_CHANCE = 0.75;
+
     private NPCOptions() {
     }
 }

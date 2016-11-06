@@ -26,10 +26,12 @@ package org.devathon.contest2016.logic;
 import net.minecraft.server.v1_10_R1.EnumHand;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
 import org.devathon.contest2016.npc.NPCOptions;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -54,11 +56,17 @@ public class AttackLogic implements Logic {
 
     @Override
     public void execute() {
-        currentRate = ThreadLocalRandom.current().nextInt(NPCOptions.MAX_CPS - NPCOptions.MIN_CPS) + NPCOptions.MIN_CPS;
+        Random random = ThreadLocalRandom.current();
+
+        currentRate = random.nextInt(NPCOptions.MAX_CPS - NPCOptions.MIN_CPS) + NPCOptions.MIN_CPS;
         ticksSinceAttack = (int) Math.round(20 / (double) currentRate);
 
         npc.getEntity().a(EnumHand.MAIN_HAND);
         npc.getEntity().B(((CraftLivingEntity) npc.getTarget()).getHandle());
+
+        if (npc.getBukkitEntity().isOnGround() && random.nextDouble() < NPCOptions.JUMP_CHANCE) {
+            npc.getBukkitEntity().setVelocity(new Vector(0, 0.45, 0));
+        }
     }
 
     @Override
