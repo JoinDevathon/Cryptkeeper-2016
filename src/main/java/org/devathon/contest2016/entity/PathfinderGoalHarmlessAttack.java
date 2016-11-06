@@ -30,14 +30,10 @@ import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class FollowEntityPathfinderGoal extends PathfinderGoalMeleeAttack {
+public class PathfinderGoalHarmlessAttack extends PathfinderGoalMeleeAttack {
 
-    private final FakeZombie npc;
-
-    public FollowEntityPathfinderGoal(FakeZombie npc, double var2, boolean var4) {
+    public PathfinderGoalHarmlessAttack(FakeZombie npc, double var2, boolean var4) {
         super(npc, var2, var4);
-
-        this.npc = npc;
     }
 
     @Override

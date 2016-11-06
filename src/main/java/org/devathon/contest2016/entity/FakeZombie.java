@@ -56,7 +56,7 @@ public class FakeZombie extends EntityZombie {
     public void r() {
         goalSelector = new PathfinderGoalSelector(NMSUtil.METHOD_PROFILER);
 
-        goalSelector.a(0, new FollowEntityPathfinderGoal(this, 1D, false));
+        goalSelector.a(0, new PathfinderGoalHarmlessAttack(this, 1D, false));
     }
 
     @Override
