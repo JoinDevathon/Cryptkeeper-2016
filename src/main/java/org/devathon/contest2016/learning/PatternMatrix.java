@@ -44,15 +44,18 @@ public class PatternMatrix {
     }
 
     public void push(Event event) {
-        if (currentRow == null) {
+        if (currentRow == null)
             currentRow = new Row();
-        }
 
         currentRow.events.add(event);
     }
 
     public void end() {
         if (currentRow != null) {
+            if (byRows.size() >= 10) {
+                byRows.remove(0);
+            }
+
             byRows.add(currentRow);
 
             currentRow = new Row();
@@ -136,6 +139,5 @@ public class PatternMatrix {
     private class Row {
 
         private final List<Event> events = new ArrayList<>();
-        private final long timestamp = System.currentTimeMillis();
     }
 }
