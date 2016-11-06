@@ -40,6 +40,7 @@ public class AttackLogic implements Logic {
     private final NPC npc;
 
     private int ticksSinceAttack;
+    private int currentRate;
 
     public AttackLogic(NPC npc) {
         this.npc = npc;
@@ -47,12 +48,13 @@ public class AttackLogic implements Logic {
 
     @Override
     public void tick() {
-        ticksSinceAttack--;
+        ticksSinceAttack = Math.max(ticksSinceAttack - 1, 0);
     }
 
     @Override
     public void execute() {
-        ticksSinceAttack = (int) Math.round(20 / (double) npc.getOptions().getSimulatedCPS());
+        currentRate = ThreadLocalRandom.current().nextInt(npc.getOptions().getMaxCPS() - npc.getOptions().getMinCPS()) + npc.getOptions().getMinCPS();
+        ticksSinceAttack = (int) Math.round(20 / (double) currentRate);
 
         npc.getEntity().a(EnumHand.MAIN_HAND);
         npc.getEntity().B(((CraftLivingEntity) npc.getTarget()).getHandle());

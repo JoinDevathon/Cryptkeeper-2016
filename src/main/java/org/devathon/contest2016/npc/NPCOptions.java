@@ -34,78 +34,20 @@ public class NPCOptions {
     }
 
     private String displayName = "Dummy";
-    private int simulatedCPS = 5;
+    private int minCPS = 2;
+    private int maxCPS = 6;
     private int potionThrowDelay = 60;
-    private double attackDamage = 3;
     private double lowReachDistance = 1.5;
     private double highReachDistance = 3;
     private double sprintDistance = 5;
-    private double walkSpeed = 2.75;
-    private double sprintSpeed = 3.75;
+    private double walkSpeed = 2.5;
+    private double sprintSpeed = 3.5;
 
     private NPCOptions() {
     }
 
-    public NPCOptions lowReachDistance(double lowReachDistance) {
-        this.lowReachDistance = lowReachDistance;
-
-        return this;
-    }
-
-    public NPCOptions highReachDistance(double highReachDistance) {
-        this.highReachDistance = highReachDistance;
-
-        return this;
-    }
-
-    public NPCOptions attackDamage(double attackDamage) {
-        this.attackDamage = attackDamage;
-
-        return this;
-    }
-
-    public NPCOptions displayName(String displayName) {
-        this.displayName = displayName;
-
-        return this;
-    }
-
-    public NPCOptions simulatedCPS(int simulatedCPS) {
-        this.simulatedCPS = simulatedCPS;
-
-        return this;
-    }
-
-    public NPCOptions potionThrowDelay(int potionThrowDelay) {
-        this.potionThrowDelay = potionThrowDelay;
-
-        return this;
-    }
-
-    public NPCOptions sprintDistance(double sprintDistance) {
-        this.sprintDistance = sprintDistance;
-
-        return this;
-    }
-
-    public NPCOptions walkSpeed(double walkSpeed) {
-        this.walkSpeed = walkSpeed;
-
-        return this;
-    }
-
-    public NPCOptions sprintSpeed(double sprintSpeed) {
-        this.sprintSpeed = sprintSpeed;
-
-        return this;
-    }
-
     public double getSprintDistance() {
         return sprintDistance;
-    }
-
-    public double getAttackDamage() {
-        return attackDamage;
     }
 
     public int getPotionThrowDelay() {
@@ -116,8 +58,12 @@ public class NPCOptions {
         return displayName;
     }
 
-    public int getSimulatedCPS() {
-        return simulatedCPS;
+    public int getMinCPS() {
+        return minCPS;
+    }
+
+    public int getMaxCPS() {
+        return maxCPS;
     }
 
     public double getLowReachDistance() {
