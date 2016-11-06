@@ -34,8 +34,8 @@ public class NPCOptions {
     }
 
     private String displayName = "Dummy";
-    private int minCPS = 2;
-    private int maxCPS = 6;
+    private int minCPS = 1;
+    private int maxCPS = 5;
     private int potionThrowDelay = 60;
     private double lowReachDistance = 1.5;
     private double highReachDistance = 3;

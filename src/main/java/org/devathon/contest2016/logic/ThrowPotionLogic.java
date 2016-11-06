@@ -30,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.devathon.contest2016.npc.NPC;
 import org.devathon.contest2016.util.EntityUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +62,8 @@ public class ThrowPotionLogic implements Logic {
         }
 
         List<ItemStack> potions = getPotions();
+
+        Collections.shuffle(potions);
 
         ItemStack itemStack = potions.remove(0);
 
