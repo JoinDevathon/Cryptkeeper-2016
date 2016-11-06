@@ -42,6 +42,8 @@ public class Options {
     public static final int MAX_CPS = 8;
 
     public static final int POTION_THROW_DELAY = 60;
+    public static final int CONSUME_ITEM_DELAY = 100;
+    public static final int FIREBALL_USE_DELAY = 100;
 
     public static final double LOW_REACH_DISTANCE = 1.5;
     public static final double HIGH_REACH_DISTANCE = 3;
@@ -50,8 +52,6 @@ public class Options {
 
     public static final double WALK_SPEED = 2.75;
     public static final double SPRINT_SPEED = 3.75;
-
-    public static final int CONSUME_ITEM_DELAY = 100;
 
     public static final double JUMP_CHANCE = 0.75;
 
@@ -69,7 +69,10 @@ public class Options {
             ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.HARM, 20 * 10, 0))),
 
             new ItemStack(Material.IRON_CHESTPLATE),
-            new ItemStack(Material.DIAMOND_HELMET)
+            new ItemStack(Material.DIAMOND_HELMET),
+
+            new ItemStack(Material.FIREBALL),
+            new ItemStack(Material.FIREBALL)
     );
 
     private Options() {

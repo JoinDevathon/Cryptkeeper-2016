@@ -23,6 +23,7 @@
  */
 package org.devathon.contest2016.learning;
 
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
@@ -59,12 +60,16 @@ public class PatternListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onThrowPotion(ProjectileLaunchEvent event) {
-        if (event.getEntity() instanceof ThrownPotion && event.getEntity().getShooter() instanceof Player) {
+        if (event.getEntity().getShooter() instanceof Player) {
             Player shooter = (Player) event.getEntity().getShooter();
 
             PatternMatrix state = PatternMatrix.of(shooter.getUniqueId());
 
-            state.push(PatternMatrix.Event.THROW_POTION);
+            if (event.getEntity() instanceof ThrownPotion) {
+                state.push(PatternMatrix.Event.THROW_POTION);
+            } else if (event.getEntity() instanceof Fireball) {
+                state.push(PatternMatrix.Event.USE_FIREBALL);
+            }
         }
     }
 }

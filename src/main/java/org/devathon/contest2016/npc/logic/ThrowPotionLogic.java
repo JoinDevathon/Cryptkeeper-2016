@@ -24,12 +24,11 @@
 package org.devathon.contest2016.npc.logic;
 
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
+import org.devathon.contest2016.Options;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPCController;
-import org.devathon.contest2016.Options;
 
 import java.util.List;
 
@@ -62,12 +61,6 @@ public class ThrowPotionLogic extends ConsumeLogic {
     @Override
     public double getWeight(PatternMatrix.Event event) {
         if (sincePotionThrown > 0) {
-            return 0;
-        }
-
-        LivingEntity target = npc.getTarget();
-
-        if (target == null) {
             return 0;
         }
 

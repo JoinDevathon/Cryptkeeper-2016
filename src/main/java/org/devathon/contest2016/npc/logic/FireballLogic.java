@@ -24,53 +24,59 @@
 package org.devathon.contest2016.npc.logic;
 
 import org.bukkit.Material;
+import org.bukkit.entity.LargeFireball;
 import org.bukkit.inventory.ItemStack;
+import org.devathon.contest2016.Options;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPCController;
-import org.devathon.contest2016.util.EntityUtil;
+
+import java.util.List;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class FireballLogic implements Logic {
+public class FireballLogic extends ConsumeLogic {
 
-    private final NPCController npc;
+    private int sinceFireballUse;
 
     public FireballLogic(NPCController npc) {
-        this.npc = npc;
+        super(npc);
     }
 
     @Override
     public void tick() {
-
+        sinceFireballUse = Math.max(sinceFireballUse - 1, 0);
     }
 
     @Override
-    public void execute() {
-        EntityUtil.look(npc.getBukkitEntity(), npc.getTarget());
+    protected void _execute(ItemStack itemStack) {
+        sinceFireballUse = Options.FIREBALL_USE_DELAY;
+
+        npc.getBukkitEntity().launchProjectile(LargeFireball.class);
     }
 
     @Override
     public double getWeight(PatternMatrix.Event event) {
-        if (npc.isWithinToTarget(10 * 10)) {
+        if (sinceFireballUse > 0) {
             return 0;
         }
 
-        if (!hasArrows()) {
+        if (npc.isWithinToTarget(6.5 * 6.5)) {
             return 0;
         }
 
-        return 0.5;
+        List<ItemStack> itemStacks = getRelevantItemStacks();
+
+        if (itemStacks == null) {
+            return 0;
+        }
+
+        return 0;
     }
 
-    private boolean hasArrows() {
-        for (ItemStack itemStack : npc.getInventory()) {
-            if (itemStack.getType() == Material.ARROW) {
-                return true;
-            }
-        }
-
-        return false;
+    @Override
+    protected boolean isRelevant(ItemStack itemStack) {
+        return itemStack.getType() == Material.FIREBALL;
     }
 }

@@ -33,6 +33,7 @@ import org.devathon.contest2016.util.SelectUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -129,18 +130,24 @@ public class PatternMatrix {
 
         THROW_POTION,
         CONSUME_GOLDEN_APPLE,
-        ATTACK;
+        ATTACK,
+        USE_FIREBALL;
 
         public Event flip() {
+            ThreadLocalRandom random = ThreadLocalRandom.current();
+
             switch (this) {
-                case ATTACK:
-                    return THROW_POTION;
+                case ATTACK: {
+                    return random.nextBoolean() ? THROW_POTION : USE_FIREBALL;
+                }
 
                 case THROW_POTION:
                     return CONSUME_GOLDEN_APPLE;
 
-                case CONSUME_GOLDEN_APPLE:
-                    return ATTACK;
+                case CONSUME_GOLDEN_APPLE: {
+                    // TODO: 3 way
+                    return random.nextBoolean() ? ATTACK : USE_FIREBALL;
+                }
 
                 default:
                     throw new IllegalArgumentException(name());
