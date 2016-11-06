@@ -26,6 +26,7 @@ package org.devathon.contest2016.logic;
 import net.minecraft.server.v1_10_R1.EnumHand;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
+import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
 import org.devathon.contest2016.npc.NPCOptions;
 
@@ -61,7 +62,7 @@ public class AttackLogic implements Logic {
     }
 
     @Override
-    public double getWeight() {
+    public double getWeight(PatternMatrix.Event event) {
         if (ticksSinceAttack > 0) {
             return 0;
         }
@@ -77,7 +78,11 @@ public class AttackLogic implements Logic {
         double diff = ThreadLocalRandom.current().nextDouble(options.getHighReachDistance() - options.getLowReachDistance()) + options.getLowReachDistance();
 
         if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(diff, 2)) {
-            return 1;
+            if (event == PatternMatrix.Event.ATTACK) {
+                return 1;
+            } else {
+                return 0.75;
+            }
         }
 
         return 0;

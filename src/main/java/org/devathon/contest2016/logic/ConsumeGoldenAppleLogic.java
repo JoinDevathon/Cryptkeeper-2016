@@ -29,6 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.devathon.contest2016.Plugin;
+import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
 
 import java.util.Collections;
@@ -80,7 +81,7 @@ public class ConsumeGoldenAppleLogic implements Logic {
     }
 
     @Override
-    public double getWeight() {
+    public double getWeight(PatternMatrix.Event event) {
         if (sinceConsumeItem > 0) {
             return 0;
         }
@@ -101,7 +102,11 @@ public class ConsumeGoldenAppleLogic implements Logic {
             return 0;
         }
 
-        return Math.max(items.size(), 9) / 9D;
+        if (event == PatternMatrix.Event.CONSUME_GOLDEN_APPLE) {
+            return 1D;
+        } else {
+            return Math.max(items.size(), 9) / (4D * 9D);
+        }
     }
 
     private List<ItemStack> getConsumables() {

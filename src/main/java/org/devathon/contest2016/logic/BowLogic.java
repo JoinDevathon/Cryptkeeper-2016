@@ -25,6 +25,7 @@ package org.devathon.contest2016.logic;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
 import org.devathon.contest2016.util.EntityUtil;
 
@@ -51,7 +52,7 @@ public class BowLogic implements Logic {
     }
 
     @Override
-    public double getWeight() {
+    public double getWeight(PatternMatrix.Event event) {
         if (npc.isWithinToTarget(10 * 10)) {
             return 0;
         }

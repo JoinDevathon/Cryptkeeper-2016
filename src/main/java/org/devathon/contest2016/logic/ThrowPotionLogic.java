@@ -27,6 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
+import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
 
 import java.util.Collections;
@@ -70,7 +71,7 @@ public class ThrowPotionLogic implements Logic {
     }
 
     @Override
-    public double getWeight() {
+    public double getWeight(PatternMatrix.Event event) {
         if (sincePotionThrown > 0) {
             return 0;
         }
@@ -93,7 +94,11 @@ public class ThrowPotionLogic implements Logic {
             return 0;
         }
 
-        return potions.size() / (4D * 9D);
+        if (event == PatternMatrix.Event.THROW_POTION) {
+            return 1D;
+        } else {
+            return potions.size() / (4D * 9D);
+        }
     }
 
     private List<ItemStack> getPotions() {

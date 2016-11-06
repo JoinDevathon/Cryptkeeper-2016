@@ -41,6 +41,7 @@ import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
 import org.devathon.contest2016.learning.LearnManager;
+import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.logic.AttackLogic;
 import org.devathon.contest2016.logic.ConsumeGoldenAppleLogic;
 import org.devathon.contest2016.logic.Logic;
@@ -93,13 +94,15 @@ public class NPC {
 
         logics.forEach(Logic::tick);
 
+        PatternMatrix.Event event = LearnManager.getInstance().get(target).flipCurrent();
+
         TObjectDoubleMap<Logic> byWeight = new TObjectDoubleHashMap<>();
 
         for (Logic logic : logics) {
-            double weight = logic.getWeight();
+            double weight = logic.getWeight(event);
 
             if (weight > 0) {
-                byWeight.put(logic, logic.getWeight());
+                byWeight.put(logic, logic.getWeight(event));
             }
         }
 

@@ -23,6 +23,8 @@
  */
 package org.devathon.contest2016.logic;
 
+import org.devathon.contest2016.learning.PatternMatrix;
+
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
@@ -33,5 +35,5 @@ public interface Logic {
 
     void execute();
 
-    double getWeight();
+    double getWeight(PatternMatrix.Event event);
 }
