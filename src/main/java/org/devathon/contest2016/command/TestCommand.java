@@ -52,7 +52,7 @@ public class TestCommand implements CommandExecutor {
 
             NPC npc = new NPC(() -> player, NPCOptions.create());
 
-            npc.spawn(player.getLocation());
+            npc.spawn(player.getLocation().add(10, 0, 10));
 
             DevathonPlugin.getInstance().getNPCRegistry().register(npc);
         }
