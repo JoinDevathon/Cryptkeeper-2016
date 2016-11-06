@@ -41,7 +41,7 @@ import org.devathon.contest2016.ItemSet;
 import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
 import org.devathon.contest2016.logic.AttackLogic;
-import org.devathon.contest2016.logic.ConsumeItemLogic;
+import org.devathon.contest2016.logic.ConsumeGoldenAppleLogic;
 import org.devathon.contest2016.logic.Logic;
 import org.devathon.contest2016.logic.ThrowPotionLogic;
 import org.devathon.contest2016.util.NMSUtil;
@@ -79,7 +79,7 @@ public class NPC {
 
         this.logics = Arrays.asList(new ThrowPotionLogic(this),
                 new AttackLogic(this),
-                new ConsumeItemLogic(this));
+                new ConsumeGoldenAppleLogic(this));
     }
 
     public void tick() {
@@ -144,6 +144,7 @@ public class NPC {
         }
 
         updateSpeed();
+        updateNameTag();
     }
 
     public void spawn(Location location) {
@@ -154,7 +155,6 @@ public class NPC {
         entity.setCanPickupItems(false);
 
         entity.setCustomNameVisible(true);
-        entity.setCustomName(options.getDisplayName());
 
         entity.getEquipment().setArmorContents(new ItemStack[4]);
         entity.getEquipment().setItemInMainHand(null);
@@ -163,6 +163,9 @@ public class NPC {
         for (ItemStack itemStack : ItemSet.STANDARD_ITEMS) {
             pickupItem(itemStack.clone());
         }
+
+        updateNameTag();
+        updateSpeed();
     }
 
     private void pickupItem(ItemStack itemStack) {
@@ -214,7 +217,7 @@ public class NPC {
         return target.get();
     }
 
-    private void updateWeapon() {
+    public void updateWeapon() {
         List<Pair<ItemStack, Double>> weighted = itemStacks.stream()
                 .map(itemStack -> Pair.of(itemStack, getGenericAttackDamage(itemStack.getType())))
                 .filter(pair -> pair.getRight() > 0)
@@ -225,6 +228,10 @@ public class NPC {
         if (weighted.size() > 0) {
             getBukkitEntity().getEquipment().setItemInMainHand(weighted.get(0).getLeft());
         }
+    }
+
+    private void updateNameTag() {
+        getBukkitEntity().setCustomName(((int) getBukkitEntity().getHealth()) + "/" + ((int) getBukkitEntity().getMaxHealth()));
     }
 
     private void updateArmor() {
@@ -254,7 +261,7 @@ public class NPC {
         return entity.isAlive();
     }
 
-    private boolean isWithinToTarget(double distanceSq) {
+    public boolean isWithinToTarget(double distanceSq) {
         Player target = getTarget();
 
         if (target != null) {

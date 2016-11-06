@@ -33,17 +33,21 @@ public class NPCOptions {
         return new NPCOptions();
     }
 
-    private String displayName = "Dummy";
-    private int minCPS = 1;
-    private int maxCPS = 5;
+    private int minCPS = 2;
+    private int maxCPS = 8;
     private int potionThrowDelay = 60;
     private double lowReachDistance = 1.5;
     private double highReachDistance = 3;
     private double sprintDistance = 5;
     private double walkSpeed = 2.75;
     private double sprintSpeed = 3.75;
+    private int consumeItemDelay = 100;
 
     private NPCOptions() {
+    }
+
+    public int getConsumeItemDelay() {
+        return consumeItemDelay;
     }
 
     public double getSprintDistance() {
@@ -52,10 +56,6 @@ public class NPCOptions {
 
     public int getPotionThrowDelay() {
         return potionThrowDelay;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public int getMinCPS() {

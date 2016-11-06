@@ -23,10 +23,12 @@
  */
 package org.devathon.contest2016.logic;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.devathon.contest2016.DevathonPlugin;
 import org.devathon.contest2016.npc.NPC;
 
 import java.util.Collections;
@@ -37,68 +39,74 @@ import java.util.stream.Collectors;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class ThrowPotionLogic implements Logic {
+public class ConsumeGoldenAppleLogic implements Logic {
 
     private final NPC npc;
 
-    private int sincePotionThrown;
+    private int sinceConsumeItem;
 
-    public ThrowPotionLogic(NPC npc) {
+    public ConsumeGoldenAppleLogic(NPC npc) {
         this.npc = npc;
     }
 
     @Override
     public void tick() {
-        sincePotionThrown = Math.max(sincePotionThrown - 1, 0);
+        sinceConsumeItem = Math.max(sinceConsumeItem - 1, 0);
     }
 
     @Override
     public void execute() {
-        sincePotionThrown = npc.getOptions().getPotionThrowDelay();
+        sinceConsumeItem = npc.getOptions().getConsumeItemDelay();
 
-        List<ItemStack> potions = getPotions();
+        List<ItemStack> items = getConsumables();
 
-        Collections.shuffle(potions);
+        Collections.shuffle(items);
 
-        ItemStack itemStack = potions.remove(0);
+        ItemStack itemStack = items.remove(0);
 
         npc.getInventory().remove(itemStack);
 
-        ThrownPotion thrownPotion = npc.getBukkitEntity().launchProjectile(ThrownPotion.class);
+        npc.getBukkitEntity().getEquipment().setItemInMainHand(itemStack);
 
-        thrownPotion.setItem(itemStack);
+        npc.getBukkitEntity().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2 * 60 * 20, 0));
+        npc.getBukkitEntity().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 5 * 20, 1));
+
+        npc.setFrozen(true);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(DevathonPlugin.getInstance(), () -> {
+            npc.updateWeapon();
+            npc.setFrozen(false);
+        }, 30L);
     }
 
     @Override
     public double getWeight() {
-        if (sincePotionThrown > 0) {
+        if (sinceConsumeItem > 0) {
             return 0;
         }
 
-        LivingEntity target = npc.getTarget();
-
-        if (target == null) {
+        if (npc.isWithinToTarget(5 * 5)) {
             return 0;
         }
 
-        double distanceSq = target.getLocation().distanceSquared(npc.getLocation());
+        double downHealth = npc.getBukkitEntity().getMaxHealth() - npc.getBukkitEntity().getHealth();
 
-        if (distanceSq > Math.pow(5.5, 2)) {
+        if (downHealth < 4 * 2) {
             return 0;
         }
 
-        List<ItemStack> potions = getPotions();
+        List<ItemStack> items = getConsumables();
 
-        if (potions.size() == 0) {
+        if (items.size() == 0) {
             return 0;
         }
 
-        return potions.size() / (4D * 9D);
+        return Math.max(items.size(), 9) / 9D;
     }
 
-    private List<ItemStack> getPotions() {
+    private List<ItemStack> getConsumables() {
         return npc.getInventory().stream()
-                .filter(itemStack -> itemStack.getType() == Material.SPLASH_POTION)
+                .filter(itemStack -> itemStack.getType() == Material.GOLDEN_APPLE)
                 .collect(Collectors.toList());
     }
 }

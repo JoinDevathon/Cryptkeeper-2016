@@ -21,34 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.logic;
+package org.devathon.contest2016;
 
-import org.devathon.contest2016.npc.NPC;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class ConsumeItemLogic implements Logic {
+public class GeneralListener implements Listener {
 
-    private final NPC npc;
-
-    public ConsumeItemLogic(NPC npc) {
-        this.npc = npc;
-    }
-
-    @Override
-    public void tick() {
-
-    }
-
-    @Override
-    public void execute() {
-
-    }
-
-    @Override
-    public double getWeight() {
-        return 0;
+    @EventHandler
+    public void onFoodChange(FoodLevelChangeEvent event) {
+        event.setCancelled(true);
+        event.setFoodLevel(20);
     }
 }

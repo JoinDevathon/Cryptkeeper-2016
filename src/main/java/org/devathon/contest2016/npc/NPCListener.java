@@ -23,14 +23,10 @@
  */
 package org.devathon.contest2016.npc;
 
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.devathon.contest2016.DevathonPlugin;
 
 /**
@@ -38,31 +34,7 @@ import org.devathon.contest2016.DevathonPlugin;
  * @since 05.11.2016
  */
 public class NPCListener implements Listener {
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onPotionSplash(EntityDamageByEntityEvent event) {
-        if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity())) {
-            if (event.getDamager() instanceof ThrownPotion) {
-                event.setCancelled(true);
-
-                LivingEntity entity = ((LivingEntity) event.getEntity());
-
-                entity.setHealth(Math.min(entity.getMaxHealth(), entity.getHealth() + event.getDamage()));
-            }
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity())) {
-            if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.MAGIC) {
-                event.setCancelled(true);
-
-                ((LivingEntity) event.getEntity()).damage(event.getAmount());
-            }
-        }
-    }
-
+    
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityCombust(EntityCombustEvent event) {
         if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity()) && event.getDuration() == 8) {
