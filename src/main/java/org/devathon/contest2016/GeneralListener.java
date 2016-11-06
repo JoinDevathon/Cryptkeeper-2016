@@ -27,6 +27,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.weather.ThunderChangeEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -47,5 +49,15 @@ public class GeneralListener implements Listener {
     public void onFoodChange(FoodLevelChangeEvent event) {
         event.setCancelled(true);
         event.setFoodLevel(20);
+    }
+
+    @EventHandler
+    public void onWeatherChange(WeatherChangeEvent event) {
+        event.setCancelled(event.toWeatherState());
+    }
+
+    @EventHandler
+    public void onThunderChange(ThunderChangeEvent event) {
+        event.setCancelled(event.toThunderState());
     }
 }

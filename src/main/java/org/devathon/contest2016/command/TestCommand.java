@@ -28,7 +28,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.devathon.contest2016.Hacks;
+import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.npc.NPC;
 import org.devathon.contest2016.npc.NPCRegistry;
 
@@ -45,7 +45,7 @@ public class TestCommand implements CommandExecutor {
 
             player.getInventory().clear();
 
-            for (ItemStack itemStack : Hacks.STANDARD_ITEMS) {
+            for (ItemStack itemStack : Plugin.getInstance().getKitItems()) {
                 player.getInventory().addItem(itemStack.clone());
             }
 
