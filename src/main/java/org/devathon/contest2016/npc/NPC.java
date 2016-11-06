@@ -29,7 +29,6 @@ import net.minecraft.server.v1_10_R1.GenericAttributes;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -37,13 +36,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.devathon.contest2016.Plugin;
+import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.data.ArmorCategory;
 import org.devathon.contest2016.npc.entity.FakeZombie;
-import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.logic.AttackLogic;
 import org.devathon.contest2016.npc.logic.GoldenAppleLogic;
 import org.devathon.contest2016.npc.logic.Logic;
 import org.devathon.contest2016.npc.logic.ThrowPotionLogic;
+import org.devathon.contest2016.util.EntityUtil;
 import org.devathon.contest2016.util.NMSUtil;
 import org.devathon.contest2016.util.SelectUtil;
 
@@ -65,88 +65,23 @@ public class NPC {
     private final List<ItemStack> itemStacks = new ArrayList<>();
     private final List<ItemStack> pendingPickups = new ArrayList<>();
 
+    private final List<Logic> logicHandlers = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this), new GoldenAppleLogic(this));
+
     private final UUID target;
-    private final List<Logic> logics;
 
-    private int ticksTilOverride = 10;
-
+    private int ticksTilOverride;
     private FakeZombie entity;
 
     public NPC(UUID target) {
         this.target = target;
-
-        this.logics = Arrays.asList(new ThrowPotionLogic(this),
-                new AttackLogic(this),
-                new GoldenAppleLogic(this));
     }
 
     public void tick() {
-        if (!entity.isAlive()) {
-            return;
-        }
-
         getBukkitEntity().setTarget(getTarget());
 
-        logics.forEach(Logic::tick);
+        executeLogics();
 
-        PatternMatrix.Event event = PatternMatrix.of(target).getExpectedEvent();
-
-        if (event != null) {
-            event = event.flip();
-        }
-
-        TObjectDoubleMap<Logic> byWeight = new TObjectDoubleHashMap<>();
-
-        for (Logic logic : logics) {
-            double weight = logic.getWeight(event);
-
-            if (weight > 0) {
-                byWeight.put(logic, logic.getWeight(event));
-            }
-        }
-
-        Logic logic = SelectUtil.select(byWeight);
-
-        if (logic != null) {
-            logic.execute();
-        }
-
-        for (Entity entity : getBukkitEntity().getNearbyEntities(2.5, 1.5, 2.5)) {
-            if (entity instanceof Item) {
-                Item item = (Item) entity;
-
-                if (item.getPickupDelay() <= 10) {
-                    pendingPickups.add(item.getItemStack());
-
-                    item.remove();
-                }
-            }
-        }
-
-        if (pendingPickups.size() > 0) {
-            if (!isWithinToTarget(4 * 4)) {
-                setFrozen(true);
-
-                long delay = Math.min(pendingPickups.size(), 3) * 20;
-
-                pendingPickups.forEach(this::pickupItem);
-
-                pendingPickups.clear();
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
-                    setFrozen(false);
-                }, delay);
-            } else {
-                ticksTilOverride--;
-
-                if (ticksTilOverride <= 0) {
-                    ticksTilOverride = 100;
-
-                    pickupItem(pendingPickups.remove(0));
-                }
-            }
-        }
-
+        updateDroppedItems();
         updateSpeed();
         updateNameTag();
     }
@@ -157,19 +92,13 @@ public class NPC {
         Zombie entity = getBukkitEntity();
 
         entity.setCanPickupItems(false);
-
         entity.setCustomNameVisible(true);
 
-        entity.getEquipment().setArmorContents(new ItemStack[4]);
-        entity.getEquipment().setItemInMainHand(null);
-        entity.getEquipment().setItemInOffHand(null);
+        EntityUtil.reset(entity);
 
-        for (ItemStack itemStack : Plugin.getInstance().getKitItems()) {
-            pickupItem(itemStack.clone());
-        }
+        itemStacks.addAll(Plugin.getInstance().getKitItems());
 
-        updateNameTag();
-        updateSpeed();
+        tick();
     }
 
     public void destroy() {
@@ -178,11 +107,67 @@ public class NPC {
         PatternMatrix.of(target).end();
     }
 
-    private void pickupItem(ItemStack itemStack) {
-        itemStacks.add(itemStack);
+    private void executeLogics() {
+        logicHandlers.forEach(Logic::tick);
 
-        updateWeapon();
-        updateArmor();
+        PatternMatrix.Event event = PatternMatrix.of(target).getExpectedEvent();
+
+        if (event != null) {
+            event = event.flip();
+        }
+
+        TObjectDoubleMap<Logic> byWeight = new TObjectDoubleHashMap<>();
+
+        for (Logic logic : logicHandlers) {
+            double weight = logic.getWeight(event);
+
+            if (weight > 0) {
+                byWeight.put(logic, weight);
+            }
+        }
+
+        Logic logic = SelectUtil.select(byWeight);
+
+        if (logic != null) {
+            logic.execute();
+        }
+    }
+
+    private void updateDroppedItems() {
+        getBukkitEntity().getNearbyEntities(2.5, 1.5, 2.5).stream().filter(entity -> entity instanceof Item).forEach(entity -> {
+            Item item = (Item) entity;
+
+            if (item.getPickupDelay() <= 10) {
+                pendingPickups.add(item.getItemStack());
+
+                item.remove();
+            }
+        });
+
+        if (pendingPickups.size() > 0) {
+            if (isWithinToTarget(4 * 4)) {
+                ticksTilOverride--;
+
+                if (ticksTilOverride <= 0) {
+                    ticksTilOverride = 100;
+
+                    itemStacks.add(pendingPickups.remove(0));
+                }
+            } else {
+                setFrozen(true);
+
+                long delay = Math.min(pendingPickups.size(), 3) * 20;
+
+                itemStacks.addAll(pendingPickups);
+                pendingPickups.clear();
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
+                    setFrozen(false);
+                }, delay);
+            }
+
+            updateEquipment();
+        }
     }
 
     private void updateSpeed() {
@@ -227,24 +212,13 @@ public class NPC {
         return Bukkit.getPlayer(target);
     }
 
-    public void updateWeapon() {
-        List<Pair<ItemStack, Double>> weighted = itemStacks.stream()
-                .map(itemStack -> Pair.of(itemStack, getGenericAttackDamage(itemStack.getType())))
-                .filter(pair -> pair.getRight() > 0)
-                .collect(Collectors.toList());
-
-        weighted.sort((a, b) -> -Double.compare(a.getRight(), b.getRight()));
-
-        if (weighted.size() > 0) {
-            getBukkitEntity().getEquipment().setItemInMainHand(weighted.get(0).getLeft());
-        }
-    }
-
     private void updateNameTag() {
-        getBukkitEntity().setCustomName(((int) getBukkitEntity().getHealth()) + "/" + ((int) getBukkitEntity().getMaxHealth()));
+        Zombie entity = getBukkitEntity();
+
+        entity.setCustomName(((int) getBukkitEntity().getHealth()) + "/" + ((int) getBukkitEntity().getMaxHealth()));
     }
 
-    private void updateArmor() {
+    public void updateEquipment() {
         for (ArmorCategory category : ArmorCategory.values()) {
             List<Pair<ItemStack, Double>> weighted = itemStacks.stream()
                     .map(itemStack -> Pair.of(itemStack, getGenericDefense(category, itemStack.getType())))
@@ -256,6 +230,17 @@ public class NPC {
             if (weighted.size() > 0) {
                 category.applyTo(getBukkitEntity(), weighted.get(0).getLeft());
             }
+        }
+
+        List<Pair<ItemStack, Double>> weighted = itemStacks.stream()
+                .map(itemStack -> Pair.of(itemStack, getGenericAttackDamage(itemStack.getType())))
+                .filter(pair -> pair.getRight() > 0)
+                .collect(Collectors.toList());
+
+        weighted.sort((a, b) -> -Double.compare(a.getRight(), b.getRight()));
+
+        if (weighted.size() > 0) {
+            getBukkitEntity().getEquipment().setItemInMainHand(weighted.get(0).getLeft());
         }
     }
 

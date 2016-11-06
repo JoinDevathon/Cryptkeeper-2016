@@ -62,7 +62,8 @@ public class GoldenAppleLogic extends ConsumeLogic {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
             if (npc.isAlive()) {
-                npc.updateWeapon();
+                npc.updateEquipment();
+
                 npc.setFrozen(false);
             }
         }, 30L);

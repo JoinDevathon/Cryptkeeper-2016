@@ -28,6 +28,8 @@ import net.minecraft.server.v1_10_R1.EntityTypes;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -50,6 +52,13 @@ public class EntityUtil {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static void reset(LivingEntity entity) {
+        entity.getEquipment().setArmorContents(new ItemStack[4]);
+
+        entity.getEquipment().setItemInMainHand(null);
+        entity.getEquipment().setItemInOffHand(null);
     }
 
     public static void register(EntityType entityType, Class<? extends net.minecraft.server.v1_10_R1.Entity> clazz) {

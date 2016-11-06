@@ -24,7 +24,9 @@
 package org.devathon.contest2016.npc;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.devathon.contest2016.Plugin;
 
 import java.util.ArrayList;
@@ -59,7 +61,9 @@ public class NPCRegistry {
         List<NPC> toRemove = null;
 
         for (NPC npc : npcs) {
-            if (!npc.isAlive() || (npc.getTarget() == null || npc.getTarget().isDead())) {
+            Player target = npc.getTarget();
+
+            if (target == null || target.isDead()) {
                 if (toRemove == null) {
                     toRemove = new ArrayList<>();
                 }
@@ -67,11 +71,15 @@ public class NPCRegistry {
                 toRemove.add(npc);
 
                 npc.destroy();
+            } else {
+                if (npc.isAlive()) {
+                    npc.tick();
+                } else {
+                    Location spawnLocation = Plugin.getInstance().getSpawnLocation(target.getWorld());
 
-                continue;
+                    npc.spawn(spawnLocation);
+                }
             }
-
-            npc.tick();
         }
 
         if (toRemove != null) {

@@ -73,6 +73,10 @@ public class Plugin extends JavaPlugin {
         return kitItems;
     }
 
+    public Location getSpawnLocation(World world) {
+        return world.getSpawnLocation();
+    }
+
     public static Plugin getInstance() {
         return instance;
     }
