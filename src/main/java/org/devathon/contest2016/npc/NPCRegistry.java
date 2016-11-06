@@ -79,7 +79,7 @@ public class NPCRegistry {
         }
     }
 
-    public boolean isNPC(int entityId) {
+    public boolean isRegistered(int entityId) {
         for (NPC npc : npcs) {
             if (npc.getBukkitEntity().getEntityId() == entityId) {
                 return true;
@@ -89,7 +89,7 @@ public class NPCRegistry {
         return false;
     }
 
-    public boolean isNPC(Entity entity) {
-        return isNPC(entity.getEntityId());
+    public boolean isRegistered(Entity entity) {
+        return isRegistered(entity.getEntityId());
     }
 }

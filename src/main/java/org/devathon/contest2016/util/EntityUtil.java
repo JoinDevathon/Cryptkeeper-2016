@@ -25,14 +25,12 @@ package org.devathon.contest2016.util;
 
 import net.minecraft.server.v1_10_R1.EntityInsentient;
 import net.minecraft.server.v1_10_R1.EntityTypes;
-import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * @author Cryptkeeper
@@ -64,27 +62,5 @@ public class EntityUtil {
         if (entity instanceof EntityInsentient) {
             ((EntityInsentient) entity).getControllerLook().a(entityOther, 10.F, ((EntityInsentient) entity).N());
         }
-    }
-
-    public static <T extends Entity> T getClosestEntity(Entity base, double maxDistance, Predicate<Entity> filter) {
-        T bestEntity = null;
-
-        Location baseLocation = base.getLocation();
-
-        for (Entity nearby : base.getNearbyEntities(maxDistance, maxDistance, maxDistance)) {
-            if (filter.test(nearby) && nearby.getEntityId() != base.getEntityId()) {
-                if (bestEntity == null || nearby.getLocation().distanceSquared(baseLocation) < bestEntity.getLocation().distanceSquared(baseLocation)) {
-                    bestEntity = (T) nearby;
-                }
-            }
-        }
-
-        if (bestEntity != null) {
-            if (bestEntity.getLocation().distanceSquared(baseLocation) > Math.pow(maxDistance, 2)) {
-                return null;
-            }
-        }
-
-        return bestEntity;
     }
 }

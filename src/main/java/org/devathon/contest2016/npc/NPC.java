@@ -40,7 +40,6 @@ import org.devathon.contest2016.Hacks;
 import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
-import org.devathon.contest2016.learning.LearnManager;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.logic.AttackLogic;
 import org.devathon.contest2016.logic.ConsumeGoldenAppleLogic;
@@ -91,7 +90,7 @@ public class NPC {
 
         logics.forEach(Logic::tick);
 
-        PatternMatrix.Event event = LearnManager.getInstance().get(target).getExpectedEvent();
+        PatternMatrix.Event event = PatternMatrix.of(target).getExpectedEvent();
 
         if (event != null) {
             event = event.flip();
@@ -177,7 +176,7 @@ public class NPC {
     public void destroy() {
         entity.world.removeEntity(entity);
 
-        LearnManager.getInstance().get(target).end();
+        PatternMatrix.of(target).end();
     }
 
     private void pickupItem(ItemStack itemStack) {

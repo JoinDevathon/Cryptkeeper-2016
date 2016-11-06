@@ -28,6 +28,7 @@ import net.minecraft.server.v1_10_R1.EnumZombieType;
 import net.minecraft.server.v1_10_R1.MobEffect;
 import net.minecraft.server.v1_10_R1.PathfinderGoalSelector;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.devathon.contest2016.util.EntityUtil;
 import org.devathon.contest2016.util.NMSUtil;
@@ -43,7 +44,7 @@ public class FakeZombie extends EntityZombie {
     }
 
     public FakeZombie(Location location) {
-        super(NMSUtil.getWorld(location.getWorld()));
+        super(((CraftWorld) location.getWorld()).getHandle());
 
         setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         setBaby(false);

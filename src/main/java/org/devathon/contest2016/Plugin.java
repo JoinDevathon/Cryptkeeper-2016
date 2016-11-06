@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.devathon.contest2016.command.TestCommand;
-import org.devathon.contest2016.learning.LearnManager;
+import org.devathon.contest2016.learning.PatternListener;
 import org.devathon.contest2016.npc.NPCListener;
 import org.devathon.contest2016.npc.NPCRegistry;
 
@@ -19,10 +19,10 @@ public class Plugin extends JavaPlugin {
         instance = this;
 
         NPCRegistry.getInstance().start();
-        LearnManager.getInstance().start();
 
         getCommand("test").setExecutor(new TestCommand());
 
+        getServer().getPluginManager().registerEvents(new PatternListener(), this);
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
         getServer().getPluginManager().registerEvents(new GeneralListener(), this);
 

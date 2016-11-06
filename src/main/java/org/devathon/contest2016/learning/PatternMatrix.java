@@ -23,12 +23,17 @@
  */
 package org.devathon.contest2016.learning;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import org.devathon.contest2016.util.SelectUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Cryptkeeper
@@ -36,11 +41,25 @@ import java.util.List;
  */
 public class PatternMatrix {
 
+    private static final LoadingCache<UUID, PatternMatrix> MATRIX_MAP = CacheBuilder.newBuilder()
+            .expireAfterAccess(30, TimeUnit.MINUTES)
+            .build(new CacheLoader<UUID, PatternMatrix>() {
+
+                @Override
+                public PatternMatrix load(UUID uuid) throws Exception {
+                    return new PatternMatrix();
+                }
+            });
+
+    public static PatternMatrix of(UUID uuid) {
+        return MATRIX_MAP.getUnchecked(uuid);
+    }
+
     private final List<Row> byRows = new ArrayList<>();
 
     private Row currentRow;
 
-    PatternMatrix() {
+    private PatternMatrix() {
     }
 
     public void push(Event event) {

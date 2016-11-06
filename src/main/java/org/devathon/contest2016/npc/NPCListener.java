@@ -37,14 +37,14 @@ public class NPCListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityCombust(EntityCombustEvent event) {
-        if (NPCRegistry.getInstance().isNPC(event.getEntity()) && event.getDuration() == 8) {
+        if (NPCRegistry.getInstance().isRegistered(event.getEntity()) && event.getDuration() == 8) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (NPCRegistry.getInstance().isNPC(event.getDamager())) {
+        if (NPCRegistry.getInstance().isRegistered(event.getDamager())) {
             if (event.getDamager().getFallDistance() > 0F && event.getDamager().getLocation().getY() > event.getEntity().getLocation().getY()) {
                 event.setDamage(event.getDamage() * 1.5D);
             }

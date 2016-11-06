@@ -37,13 +37,13 @@ import org.devathon.contest2016.npc.NPCRegistry;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-class EventListener implements Listener {
+public class PatternListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (NPCRegistry.getInstance().isNPC(event.getEntity())) {
+        if (NPCRegistry.getInstance().isRegistered(event.getEntity())) {
             if (event.getDamager() instanceof Player) {
-                PatternMatrix state = LearnManager.getInstance().get((Player) event.getDamager());
+                PatternMatrix state = PatternMatrix.of(event.getDamager().getUniqueId());
 
                 state.push(PatternMatrix.Event.ATTACK);
             }
@@ -52,7 +52,7 @@ class EventListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onItemConsume(PlayerItemConsumeEvent event) {
-        PatternMatrix state = LearnManager.getInstance().get(event.getPlayer());
+        PatternMatrix state = PatternMatrix.of(event.getPlayer().getUniqueId());
 
         state.push(PatternMatrix.Event.CONSUME_GOLDEN_APPLE);
     }
@@ -62,7 +62,7 @@ class EventListener implements Listener {
         if (event.getEntity() instanceof ThrownPotion && event.getEntity().getShooter() instanceof Player) {
             Player shooter = (Player) event.getEntity().getShooter();
 
-            PatternMatrix state = LearnManager.getInstance().get(shooter);
+            PatternMatrix state = PatternMatrix.of(shooter.getUniqueId());
 
             state.push(PatternMatrix.Event.THROW_POTION);
         }
