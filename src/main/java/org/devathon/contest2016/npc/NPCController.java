@@ -25,9 +25,13 @@ package org.devathon.contest2016.npc;
 
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_10_R1.GenericAttributes;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -37,14 +41,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.devathon.contest2016.Options;
 import org.devathon.contest2016.Plugin;
-import org.devathon.contest2016.npc.data.SpawnControl;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.data.ArmorCategory;
+import org.devathon.contest2016.npc.data.SpawnControl;
 import org.devathon.contest2016.npc.entity.FakeZombie;
-import org.devathon.contest2016.npc.logic.AttackLogic;
-import org.devathon.contest2016.npc.logic.GoldenAppleLogic;
-import org.devathon.contest2016.npc.logic.Logic;
-import org.devathon.contest2016.npc.logic.ThrowPotionLogic;
+import org.devathon.contest2016.npc.logic.*;
 import org.devathon.contest2016.util.EntityUtil;
 import org.devathon.contest2016.util.NMSUtil;
 import org.devathon.contest2016.util.SelectUtil;
@@ -67,7 +68,10 @@ public class NPCController {
     private final List<ItemStack> itemStacks = new ArrayList<>();
     private final List<ItemStack> pendingPickups = new ArrayList<>();
 
-    private final List<Logic> logicHandlers = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this), new GoldenAppleLogic(this));
+    private final List<Logic> logicHandlers = Arrays.asList(new ThrowPotionLogic(this),
+            new AttackLogic(this),
+            new GoldenAppleLogic(this),
+            new FireballLogic(this));
 
     private final UUID target;
     private final SpawnControl point;
@@ -81,8 +85,6 @@ public class NPCController {
     }
 
     public void tick() {
-        getBukkitEntity().setTarget(getTarget());
-
         executeLogics();
 
         updateDroppedItems();
@@ -93,6 +95,13 @@ public class NPCController {
     public void attemptSpawn() {
         if (point.attemptSpawn()) {
             Player target = getTarget();
+
+            target.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 10, 255));
+            target.getInventory().clear();
+
+            Options.KIT_ITEMS.forEach(itemStack -> target.getInventory().addItem(itemStack.clone()));
+
+            target.updateInventory();
 
             Location location = point.toLocation(target.getWorld());
 
@@ -105,9 +114,15 @@ public class NPCController {
 
             EntityUtil.reset(entity);
 
-            Options.KIT_ITEMS.forEach(itemStack -> itemStacks.add(itemStack.clone()));
+            Options.NPC_KIT_ITEMS.forEach(itemStack -> itemStacks.add(itemStack.clone()));
 
-            // TODO: Messages
+            target.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.AQUA + "A challenger enters..."));
+
+            for (int x = -2; x < 3; x++) {
+                for (int z = -2; z < 3; z++) {
+                    entity.getWorld().playEffect(entity.getLocation().add(x, 1, z), Effect.LARGE_SMOKE, 5);
+                }
+            }
 
             updateEquipment();
             tick();
@@ -117,10 +132,12 @@ public class NPCController {
     public void destroy() {
         entity.world.removeEntity(entity);
 
-        PatternMatrix.of(target).end();
+        PatternMatrix.of(this.target).end();
     }
 
     private void executeLogics() {
+        getBukkitEntity().setTarget(getTarget());
+
         logicHandlers.forEach(Logic::tick);
 
         PatternMatrix.Event event = PatternMatrix.of(target).getExpectedEvent();
@@ -228,7 +245,21 @@ public class NPCController {
     private void updateNameTag() {
         Zombie entity = getBukkitEntity();
 
-        entity.setCustomName(((int) getBukkitEntity().getHealth()) + "/" + ((int) getBukkitEntity().getMaxHealth()));
+        String nametag = ChatColor.GREEN.toString();
+
+        int hearts = (int) Math.ceil(entity.getHealth() / 5D);
+
+        for (int i = 0; i < hearts; i++) {
+            nametag += "❤";
+        }
+
+        nametag += ChatColor.RED;
+
+        for (int i = 0; i < (4 - hearts); i++) {
+            nametag += "❤";
+        }
+
+        entity.setCustomName(nametag);
     }
 
     public void updateEquipment() {

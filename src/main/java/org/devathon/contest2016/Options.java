@@ -38,41 +38,48 @@ import java.util.List;
  */
 public class Options {
 
-    public static final int MIN_CPS = 2;
-    public static final int MAX_CPS = 8;
+    public static final int MIN_CPS = 1;
+    public static final int MAX_CPS = 4;
 
     public static final int POTION_THROW_DELAY = 60;
     public static final int CONSUME_ITEM_DELAY = 100;
     public static final int FIREBALL_USE_DELAY = 100;
 
-    public static final double LOW_REACH_DISTANCE = 1.5;
-    public static final double HIGH_REACH_DISTANCE = 3;
+    public static final double LOW_REACH_DISTANCE = 1;
+    public static final double HIGH_REACH_DISTANCE = 2.5;
 
     public static final double SPRINT_DISTANCE = 5;
 
     public static final double WALK_SPEED = 2.75;
     public static final double SPRINT_SPEED = 3.75;
 
-    public static final double JUMP_CHANCE = 0.75;
+    public static final double JUMP_CHANCE = 0.65;
 
     public static final int ARENA_SIZE = 20;
 
-    public static final List<ItemStack> KIT_ITEMS = Arrays.asList(
-            new ItemStack(Material.DIAMOND_SWORD),
+    public static final List<ItemStack> NPC_KIT_ITEMS = Arrays.asList(
+            new ItemStack(Material.IRON_SWORD),
 
-            new ItemStack(Material.GOLDEN_APPLE),
-            new ItemStack(Material.GOLDEN_APPLE),
-            new ItemStack(Material.GOLDEN_APPLE),
+            new ItemStack(Material.GOLDEN_APPLE, 3),
 
             ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.SLOW, 20 * 10, 1))),
             ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.WITHER, 20 * 10, 0))),
             ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.HARM, 20 * 10, 0))),
 
-            new ItemStack(Material.IRON_CHESTPLATE),
-            new ItemStack(Material.DIAMOND_HELMET),
+            new ItemStack(Material.FIREBALL, 2),
 
-            new ItemStack(Material.FIREBALL),
-            new ItemStack(Material.FIREBALL)
+            new ItemStack(Material.LEATHER_HELMET),
+            new ItemStack(Material.IRON_CHESTPLATE)
+    );
+
+    public static final List<ItemStack> KIT_ITEMS = Arrays.asList(
+            new ItemStack(Material.DIAMOND_SWORD),
+
+            new ItemStack(Material.GOLDEN_APPLE, 3),
+
+            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.SLOW, 20 * 10, 1))),
+            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.WITHER, 20 * 10, 0))),
+            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.HARM, 20 * 10, 0)))
     );
 
     private Options() {

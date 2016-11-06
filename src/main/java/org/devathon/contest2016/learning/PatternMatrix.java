@@ -145,8 +145,7 @@ public class PatternMatrix {
                     return CONSUME_GOLDEN_APPLE;
 
                 case CONSUME_GOLDEN_APPLE: {
-                    // TODO: 3 way
-                    return random.nextBoolean() ? ATTACK : USE_FIREBALL;
+                    return random.nextBoolean() ? ATTACK : THROW_POTION;
                 }
 
                 default:

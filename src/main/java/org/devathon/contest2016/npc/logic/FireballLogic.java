@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class FireballLogic extends ConsumeLogic {
 
-    private int sinceFireballUse;
+    private int sinceFireballUse = Options.FIREBALL_USE_DELAY;
 
     public FireballLogic(NPCController npc) {
         super(npc);
@@ -62,7 +62,7 @@ public class FireballLogic extends ConsumeLogic {
             return 0;
         }
 
-        if (npc.isWithinToTarget(6.5 * 6.5)) {
+        if (npc.isWithinToTarget(5.5 * 5.5)) {
             return 0;
         }
 
@@ -72,7 +72,17 @@ public class FireballLogic extends ConsumeLogic {
             return 0;
         }
 
-        return 0;
+        if (event == PatternMatrix.Event.USE_FIREBALL) {
+            return 1;
+        }
+
+        double base = itemStacks.size() / (4 * 9);
+
+        if (npc.getTarget().isSprinting()) {
+            base += 0.5;
+        }
+
+        return base;
     }
 
     @Override

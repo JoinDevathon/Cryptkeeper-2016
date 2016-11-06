@@ -48,7 +48,13 @@ abstract class ConsumeLogic implements Logic {
 
         Collections.shuffle(itemStacks);
 
-        ItemStack toRemove = itemStacks.remove(0);
+        ItemStack toRemove = itemStacks.get(0);
+
+        if (toRemove.getAmount() == 1) {
+            itemStacks.remove(0);
+        } else {
+            toRemove.setAmount(toRemove.getAmount() - 1);
+        }
 
         npc.getInventory().remove(toRemove);
 

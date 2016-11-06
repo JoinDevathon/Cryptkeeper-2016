@@ -25,11 +25,12 @@ package org.devathon.contest2016.npc.logic;
 
 import net.minecraft.server.v1_10_R1.EnumHand;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.devathon.contest2016.Options;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPCController;
-import org.devathon.contest2016.Options;
+import org.devathon.contest2016.util.ItemStackUtil;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -77,15 +78,15 @@ public class AttackLogic implements Logic {
             return 0;
         }
 
-        LivingEntity target = npc.getTarget();
+        ItemStack itemStack = npc.getBukkitEntity().getEquipment().getItemInMainHand();
 
-        if (target == null) {
+        if (itemStack != null && ItemStackUtil.getGenericAttackDamage(itemStack.getType()) == 0) {
             return 0;
         }
 
         double diff = ThreadLocalRandom.current().nextDouble(Options.HIGH_REACH_DISTANCE - Options.LOW_REACH_DISTANCE) + Options.LOW_REACH_DISTANCE;
 
-        if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(diff, 2)) {
+        if (npc.isWithinToTarget(diff * diff)) {
             if (event == PatternMatrix.Event.ATTACK) {
                 return 1;
             } else {
