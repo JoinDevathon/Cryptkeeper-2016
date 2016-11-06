@@ -63,8 +63,9 @@ public class PatternMatrix {
     }
 
     public void push(Event event) {
-        if (currentRow == null)
+        if (currentRow == null) {
             currentRow = new Row();
+        }
 
         currentRow.events.add(event);
     }
@@ -124,9 +125,9 @@ public class PatternMatrix {
 
         if (index < averages.size()) {
             return averages.get(index);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public enum Event {

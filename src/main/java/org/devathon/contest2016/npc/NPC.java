@@ -41,7 +41,7 @@ import org.devathon.contest2016.npc.data.ArmorCategory;
 import org.devathon.contest2016.npc.entity.FakeZombie;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.logic.AttackLogic;
-import org.devathon.contest2016.npc.logic.ConsumeGoldenAppleLogic;
+import org.devathon.contest2016.npc.logic.GoldenAppleLogic;
 import org.devathon.contest2016.npc.logic.Logic;
 import org.devathon.contest2016.npc.logic.ThrowPotionLogic;
 import org.devathon.contest2016.util.NMSUtil;
@@ -77,7 +77,7 @@ public class NPC {
 
         this.logics = Arrays.asList(new ThrowPotionLogic(this),
                 new AttackLogic(this),
-                new ConsumeGoldenAppleLogic(this));
+                new GoldenAppleLogic(this));
     }
 
     public void tick() {

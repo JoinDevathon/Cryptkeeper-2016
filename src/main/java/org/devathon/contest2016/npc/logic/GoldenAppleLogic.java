@@ -31,24 +31,19 @@ import org.bukkit.potion.PotionEffectType;
 import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.npc.NPCOptions;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class ConsumeGoldenAppleLogic implements Logic {
-
-    private final NPC npc;
+public class GoldenAppleLogic extends ConsumeLogic {
 
     private int sinceConsumeItem;
 
-    public ConsumeGoldenAppleLogic(NPC npc) {
-        this.npc = npc;
+    public GoldenAppleLogic(NPC npc) {
+        super(npc);
     }
 
     @Override
@@ -57,17 +52,7 @@ public class ConsumeGoldenAppleLogic implements Logic {
     }
 
     @Override
-    public void execute() {
-        sinceConsumeItem = NPCOptions.CONSUME_ITEM_DELAY;
-
-        List<ItemStack> items = getConsumables();
-
-        Collections.shuffle(items);
-
-        ItemStack itemStack = items.remove(0);
-
-        npc.getInventory().remove(itemStack);
-
+    protected void _execute(ItemStack itemStack) {
         npc.getBukkitEntity().getEquipment().setItemInMainHand(itemStack);
 
         npc.getBukkitEntity().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2 * 60 * 20, 0));
@@ -99,22 +84,21 @@ public class ConsumeGoldenAppleLogic implements Logic {
             return 0;
         }
 
-        List<ItemStack> items = getConsumables();
+        List<ItemStack> items = getRelevantItemStacks();
 
-        if (items.size() == 0) {
+        if (items == null) {
             return 0;
         }
 
         if (event == PatternMatrix.Event.CONSUME_GOLDEN_APPLE) {
-            return 1D;
-        } else {
-            return Math.max(items.size(), 9) / (4D * 9D);
+            return 1;
         }
+
+        return items.size() / (4 * 9);
     }
 
-    private List<ItemStack> getConsumables() {
-        return npc.getInventory().stream()
-                .filter(itemStack -> itemStack.getType() == Material.GOLDEN_APPLE)
-                .collect(Collectors.toList());
+    @Override
+    protected boolean isRelevant(ItemStack itemStack) {
+        return itemStack.getType() == Material.GOLDEN_APPLE;
     }
 }

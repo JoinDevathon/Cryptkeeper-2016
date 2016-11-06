@@ -31,22 +31,18 @@ import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
 import org.devathon.contest2016.npc.NPCOptions;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class ThrowPotionLogic implements Logic {
-
-    private final NPC npc;
+public class ThrowPotionLogic extends ConsumeLogic {
 
     private int sincePotionThrown;
 
     public ThrowPotionLogic(NPC npc) {
-        this.npc = npc;
+        super(npc);
     }
 
     @Override
@@ -55,16 +51,8 @@ public class ThrowPotionLogic implements Logic {
     }
 
     @Override
-    public void execute() {
+    protected void _execute(ItemStack itemStack) {
         sincePotionThrown = NPCOptions.POTION_THROW_DELAY;
-
-        List<ItemStack> potions = getPotions();
-
-        Collections.shuffle(potions);
-
-        ItemStack itemStack = potions.remove(0);
-
-        npc.getInventory().remove(itemStack);
 
         ThrownPotion thrownPotion = npc.getBukkitEntity().launchProjectile(ThrownPotion.class);
 
@@ -83,28 +71,25 @@ public class ThrowPotionLogic implements Logic {
             return 0;
         }
 
-        double distanceSq = target.getLocation().distanceSquared(npc.getLocation());
-
-        if (distanceSq > Math.pow(5.5, 2)) {
+        if (!npc.isWithinToTarget(5.5 * 5.5)) {
             return 0;
         }
 
-        List<ItemStack> potions = getPotions();
+        List<ItemStack> itemStacks = getRelevantItemStacks();
 
-        if (potions.size() == 0) {
+        if (itemStacks == null) {
             return 0;
         }
 
         if (event == PatternMatrix.Event.THROW_POTION) {
-            return 1D;
-        } else {
-            return potions.size() / (4D * 9D);
+            return 1;
         }
+
+        return itemStacks.size() / (4 * 9);
     }
 
-    private List<ItemStack> getPotions() {
-        return npc.getInventory().stream()
-                .filter(itemStack -> itemStack.getType() == Material.SPLASH_POTION)
-                .collect(Collectors.toList());
+    @Override
+    protected boolean isRelevant(ItemStack itemStack) {
+        return itemStack.getType() == Material.SPLASH_POTION;
     }
 }

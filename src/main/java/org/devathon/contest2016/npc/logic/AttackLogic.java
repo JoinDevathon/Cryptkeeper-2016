@@ -40,6 +40,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class AttackLogic implements Logic {
 
+    private final Vector JUMP_VECTOR = new Vector(0, 0.45, 0);
+
     private final NPC npc;
 
     private int ticksSinceAttack;
@@ -65,7 +67,7 @@ public class AttackLogic implements Logic {
         npc.getEntity().B(((CraftLivingEntity) npc.getTarget()).getHandle());
 
         if (npc.getBukkitEntity().isOnGround() && random.nextDouble() < NPCOptions.JUMP_CHANCE) {
-            npc.getBukkitEntity().setVelocity(new Vector(0, 0.45, 0));
+            npc.getBukkitEntity().setVelocity(JUMP_VECTOR);
         }
     }
 

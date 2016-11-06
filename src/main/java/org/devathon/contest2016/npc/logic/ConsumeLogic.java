@@ -21,45 +21,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.npc.entity;
+package org.devathon.contest2016.npc.logic;
 
-import net.minecraft.server.v1_10_R1.*;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.entity.EntityType;
-import org.devathon.contest2016.util.EntityUtil;
-import org.devathon.contest2016.util.NMSUtil;
+import org.bukkit.inventory.ItemStack;
+import org.devathon.contest2016.npc.NPC;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class FakeZombie extends EntityZombie {
+abstract class ConsumeLogic implements Logic {
 
-    static {
-        EntityUtil.register(EntityType.ZOMBIE, FakeZombie.class);
-    }
+    protected final NPC npc;
 
-    public FakeZombie(Location location) {
-        super(((CraftWorld) location.getWorld()).getHandle());
-
-        setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-        setBaby(false);
-        setVillagerType(EnumZombieType.NORMAL);
-
-        world.addEntity(this);
+    ConsumeLogic(NPC npc) {
+        this.npc = npc;
     }
 
     @Override
-    public void r() {
-        goalSelector = new PathfinderGoalSelector(NMSUtil.METHOD_PROFILER);
+    public void execute() {
+        List<ItemStack> itemStacks = getRelevantItemStacks();
 
-        goalSelector.a(0, new PathfinderGoalFloat(this));
-        goalSelector.a(1, new CustomPathfinderGoal(this, 1D, false));
+        Collections.shuffle(itemStacks);
+
+        ItemStack toRemove = itemStacks.remove(0);
+
+        npc.getInventory().remove(toRemove);
+
+        _execute(toRemove);
     }
 
-    @Override
-    public boolean d(MobEffect mobeffect) {
-        return true;
+    protected abstract void _execute(ItemStack itemStack);
+
+    protected abstract boolean isRelevant(ItemStack itemStack);
+
+    List<ItemStack> getRelevantItemStacks() {
+        List<ItemStack> itemStacks = null;
+
+        for (ItemStack itemStack : npc.getInventory()) {
+            if (isRelevant(itemStack)) {
+                if (itemStacks == null) {
+                    itemStacks = new ArrayList<>();
+                }
+
+                itemStacks.add(itemStack);
+            }
+        }
+
+        return itemStacks;
     }
 }
