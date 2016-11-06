@@ -34,12 +34,14 @@ public class NPCOptions {
     }
 
     private String displayName = "Dummy";
-    private int simulatedCPS = 7;
-    private int potionThrowDelay = 15;
+    private int simulatedCPS = 5;
+    private int potionThrowDelay = 60;
     private double attackDamage = 3;
     private double lowReachDistance = 1.5;
     private double highReachDistance = 3;
     private double sprintDistance = 5;
+    private double walkSpeed = 2.75;
+    private double sprintSpeed = 3.75;
 
     private NPCOptions() {
     }
@@ -86,6 +88,18 @@ public class NPCOptions {
         return this;
     }
 
+    public NPCOptions walkSpeed(double walkSpeed) {
+        this.walkSpeed = walkSpeed;
+
+        return this;
+    }
+
+    public NPCOptions sprintSpeed(double sprintSpeed) {
+        this.sprintSpeed = sprintSpeed;
+
+        return this;
+    }
+
     public double getSprintDistance() {
         return sprintDistance;
     }
@@ -112,5 +126,13 @@ public class NPCOptions {
 
     public double getHighReachDistance() {
         return highReachDistance;
+    }
+
+    public double getWalkSpeed() {
+        return walkSpeed;
+    }
+
+    public double getSprintSpeed() {
+        return sprintSpeed;
     }
 }

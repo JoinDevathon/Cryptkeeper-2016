@@ -191,7 +191,7 @@ public class NPC {
     }
 
     public void setSprinting(boolean sprinting) {
-        double speed = sprinting ? 4 : 2.75;
+        double speed = sprinting ? options.getSprintSpeed() : options.getWalkSpeed();
 
         speed *= NMSUtil.PLAYER_ABILITIES.walkSpeed;
 
