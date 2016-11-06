@@ -1,3 +1,6 @@
+# BobTheLearningZombie
+A machine learning Zombie that tries to kill you!
+
 # Devathon Project
 This is the base layout for your Devathon Project. It includes several scripts to make running incredibly easy on Windows, Mac, and Linux.
 
