@@ -30,7 +30,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.devathon.contest2016.Hacks;
 import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.npc.NPCOptions;
 import org.devathon.contest2016.npc.NPCRegistry;
 
 /**
@@ -50,7 +49,7 @@ public class TestCommand implements CommandExecutor {
                 player.getInventory().addItem(itemStack.clone());
             }
 
-            NPC npc = new NPC(player.getUniqueId(), NPCOptions.create());
+            NPC npc = new NPC(player.getUniqueId());
 
             npc.spawn(player.getLocation().add(10, 0, 10));
 

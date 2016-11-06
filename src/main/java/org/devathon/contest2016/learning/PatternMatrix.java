@@ -62,26 +62,7 @@ public class PatternMatrix {
         }
     }
 
-    public Event flipCurrent() {
-        Event current = getCurrentAverage();
-
-        if (current != null) {
-            switch (current) {
-                case ATTACK:
-                case THROW_POTION:
-                    return Event.CONSUME_GOLDEN_APPLE;
-                case CONSUME_GOLDEN_APPLE:
-                    return Event.ATTACK;
-
-                default:
-                    throw new IllegalArgumentException(current.name());
-            }
-        } else {
-            return null;
-        }
-    }
-
-    private Event getCurrentAverage() {
+    public Event getExpectedEvent() {
         int totalLength = 0;
 
         for (Row row : byRows) {
@@ -133,7 +114,21 @@ public class PatternMatrix {
 
         THROW_POTION,
         CONSUME_GOLDEN_APPLE,
-        ATTACK
+        ATTACK;
+
+        public Event flip() {
+            switch (this) {
+                case ATTACK:
+                case THROW_POTION:
+                    return CONSUME_GOLDEN_APPLE;
+
+                case CONSUME_GOLDEN_APPLE:
+                    return ATTACK;
+
+                default:
+                    throw new IllegalArgumentException(name());
+            }
+        }
     }
 
     private class Row {

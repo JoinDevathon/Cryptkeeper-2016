@@ -54,7 +54,7 @@ public class AttackLogic implements Logic {
 
     @Override
     public void execute() {
-        currentRate = ThreadLocalRandom.current().nextInt(npc.getOptions().getMaxCPS() - npc.getOptions().getMinCPS()) + npc.getOptions().getMinCPS();
+        currentRate = ThreadLocalRandom.current().nextInt(NPCOptions.MAX_CPS - NPCOptions.MIN_CPS) + NPCOptions.MIN_CPS;
         ticksSinceAttack = (int) Math.round(20 / (double) currentRate);
 
         npc.getEntity().a(EnumHand.MAIN_HAND);
@@ -73,9 +73,7 @@ public class AttackLogic implements Logic {
             return 0;
         }
 
-        NPCOptions options = npc.getOptions();
-
-        double diff = ThreadLocalRandom.current().nextDouble(options.getHighReachDistance() - options.getLowReachDistance()) + options.getLowReachDistance();
+        double diff = ThreadLocalRandom.current().nextDouble(NPCOptions.HIGH_REACH_DISTANCE - NPCOptions.LOW_REACH_DISTANCE) + NPCOptions.LOW_REACH_DISTANCE;
 
         if (target.getLocation().distanceSquared(npc.getLocation()) < Math.pow(diff, 2)) {
             if (event == PatternMatrix.Event.ATTACK) {

@@ -69,16 +69,13 @@ public class NPC {
 
     private final UUID target;
     private final List<Logic> logics;
-    private final NPCOptions options;
 
     private int ticksTilOverride = 10;
-    private int ticksLived;
 
     private FakeZombie entity;
 
-    public NPC(UUID target, NPCOptions options) {
+    public NPC(UUID target) {
         this.target = target;
-        this.options = options;
 
         this.logics = Arrays.asList(new ThrowPotionLogic(this),
                 new AttackLogic(this),
@@ -94,7 +91,11 @@ public class NPC {
 
         logics.forEach(Logic::tick);
 
-        PatternMatrix.Event event = LearnManager.getInstance().get(target).flipCurrent();
+        PatternMatrix.Event event = LearnManager.getInstance().get(target).getExpectedEvent();
+
+        if (event != null) {
+            event = event.flip();
+        }
 
         TObjectDoubleMap<Logic> byWeight = new TObjectDoubleHashMap<>();
 
@@ -148,12 +149,8 @@ public class NPC {
             }
         }
 
-        LearnManager.getInstance().get(target).flipCurrent();
-
         updateSpeed();
         updateNameTag();
-
-        ticksLived += 1;
     }
 
     public void spawn(Location location) {
@@ -191,7 +188,7 @@ public class NPC {
     }
 
     private void updateSpeed() {
-        if (!isWithinToTarget(Math.pow(options.getSprintDistance(), 2))) {
+        if (!isWithinToTarget(Math.pow(NPCOptions.SPRINT_DISTANCE, 2))) {
             setSprinting(true);
         } else {
             Player target = getTarget();
@@ -209,7 +206,7 @@ public class NPC {
     }
 
     public void setSprinting(boolean sprinting) {
-        double speed = sprinting ? options.getSprintSpeed() : options.getWalkSpeed();
+        double speed = sprinting ? NPCOptions.SPRINT_SPEED : NPCOptions.WALK_SPEED;
 
         speed *= NMSUtil.PLAYER_ABILITIES.walkSpeed;
 
@@ -266,10 +263,6 @@ public class NPC {
 
     public List<ItemStack> getInventory() {
         return itemStacks;
-    }
-
-    public NPCOptions getOptions() {
-        return options;
     }
 
     public boolean isAlive() {

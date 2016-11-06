@@ -26,12 +26,22 @@ package org.devathon.contest2016;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
 public class GeneralListener implements Listener {
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        event.getPlayer().setHealth(event.getPlayer().getMaxHealth());
+        event.getPlayer().setFoodLevel(20);
+        event.getPlayer().getInventory().clear();
+        event.getPlayer().getEquipment().setArmorContents(new ItemStack[4]);
+    }
 
     @EventHandler
     public void onFoodChange(FoodLevelChangeEvent event) {

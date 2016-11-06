@@ -29,56 +29,21 @@ package org.devathon.contest2016.npc;
  */
 public class NPCOptions {
 
-    public static NPCOptions create() {
-        return new NPCOptions();
-    }
+    public static final int MIN_CPS = 2;
+    public static final int MAX_CPS = 8;
 
-    private int minCPS = 2;
-    private int maxCPS = 8;
-    private int potionThrowDelay = 60;
-    private double lowReachDistance = 1.5;
-    private double highReachDistance = 3;
-    private double sprintDistance = 5;
-    private double walkSpeed = 2.75;
-    private double sprintSpeed = 3.75;
-    private int consumeItemDelay = 100;
+    public static final int POTION_THROW_DELAY = 60;
+
+    public static final double LOW_REACH_DISTANCE = 1.5;
+    public static final double HIGH_REACH_DISTANCE = 3;
+
+    public static final double SPRINT_DISTANCE = 5;
+
+    public static final double WALK_SPEED = 2.75;
+    public static final double SPRINT_SPEED = 3.75;
+
+    public static final int CONSUME_ITEM_DELAY = 100;
 
     private NPCOptions() {
-    }
-
-    public int getConsumeItemDelay() {
-        return consumeItemDelay;
-    }
-
-    public double getSprintDistance() {
-        return sprintDistance;
-    }
-
-    public int getPotionThrowDelay() {
-        return potionThrowDelay;
-    }
-
-    public int getMinCPS() {
-        return minCPS;
-    }
-
-    public int getMaxCPS() {
-        return maxCPS;
-    }
-
-    public double getLowReachDistance() {
-        return lowReachDistance;
-    }
-
-    public double getHighReachDistance() {
-        return highReachDistance;
-    }
-
-    public double getWalkSpeed() {
-        return walkSpeed;
-    }
-
-    public double getSprintSpeed() {
-        return sprintSpeed;
     }
 }

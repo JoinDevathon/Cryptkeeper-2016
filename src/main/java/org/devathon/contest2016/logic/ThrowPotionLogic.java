@@ -29,6 +29,7 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
+import org.devathon.contest2016.npc.NPCOptions;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +56,7 @@ public class ThrowPotionLogic implements Logic {
 
     @Override
     public void execute() {
-        sincePotionThrown = npc.getOptions().getPotionThrowDelay();
+        sincePotionThrown = NPCOptions.POTION_THROW_DELAY;
 
         List<ItemStack> potions = getPotions();
 

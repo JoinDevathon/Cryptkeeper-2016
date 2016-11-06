@@ -31,6 +31,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.NPC;
+import org.devathon.contest2016.npc.NPCOptions;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +58,7 @@ public class ConsumeGoldenAppleLogic implements Logic {
 
     @Override
     public void execute() {
-        sinceConsumeItem = npc.getOptions().getConsumeItemDelay();
+        sinceConsumeItem = NPCOptions.CONSUME_ITEM_DELAY;
 
         List<ItemStack> items = getConsumables();
 
