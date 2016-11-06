@@ -37,7 +37,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.devathon.contest2016.Options;
 import org.devathon.contest2016.Plugin;
-import org.devathon.contest2016.Point;
+import org.devathon.contest2016.npc.data.SpawnControl;
 import org.devathon.contest2016.learning.PatternMatrix;
 import org.devathon.contest2016.npc.data.ArmorCategory;
 import org.devathon.contest2016.npc.entity.FakeZombie;
@@ -70,12 +70,12 @@ public class NPCController {
     private final List<Logic> logicHandlers = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this), new GoldenAppleLogic(this));
 
     private final UUID target;
-    private final Point point;
+    private final SpawnControl point;
 
     private int ticksTilOverride;
     private FakeZombie entity;
 
-    public NPCController(UUID target, Point point) {
+    public NPCController(UUID target, SpawnControl point) {
         this.target = target;
         this.point = point;
     }

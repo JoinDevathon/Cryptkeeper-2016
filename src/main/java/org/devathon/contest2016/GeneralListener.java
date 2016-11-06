@@ -42,6 +42,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.devathon.contest2016.npc.NPCController;
 import org.devathon.contest2016.npc.NPCRegistry;
+import org.devathon.contest2016.npc.data.SpawnControl;
 import org.devathon.contest2016.util.ItemStackUtil;
 
 import java.util.HashMap;
@@ -154,7 +155,7 @@ public class GeneralListener implements Listener {
             Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
                 Location spawnLocation = location.clone().add(0, 1, 0);
 
-                Point point = new Point(spawnLocation);
+                SpawnControl point = new SpawnControl(spawnLocation);
                 NPCController controller = new NPCController(player.getUniqueId(), point);
 
                 NPCRegistry.getInstance().register(controller);

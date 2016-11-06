@@ -21,54 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.npc.logic;
+package org.devathon.contest2016.npc.data;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.devathon.contest2016.learning.PatternMatrix;
-import org.devathon.contest2016.npc.NPCController;
-import org.devathon.contest2016.util.EntityUtil;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class BowLogic implements Logic {
+public class SpawnControl {
 
-    private final NPCController npc;
+    private final Vector vector;
 
-    public BowLogic(NPCController npc) {
-        this.npc = npc;
+    private int spawnDelay = 2 * 20;
+
+    public SpawnControl(Location location) {
+        this.vector = location.toVector();
     }
 
-    @Override
-    public void tick() {
-
+    public Location toLocation(World world) {
+        return vector.toLocation(world);
     }
 
-    @Override
-    public void execute() {
-        EntityUtil.look(npc.getBukkitEntity(), npc.getTarget());
-    }
+    public boolean attemptSpawn() {
+        spawnDelay--;
 
-    @Override
-    public double getWeight(PatternMatrix.Event event) {
-        if (npc.isWithinToTarget(10 * 10)) {
-            return 0;
-        }
+        if (spawnDelay <= 0) {
+            spawnDelay = 3 * 20;
 
-        if (!hasArrows()) {
-            return 0;
-        }
-
-        return 0.5;
-    }
-
-    private boolean hasArrows() {
-        for (ItemStack itemStack : npc.getInventory()) {
-            if (itemStack.getType() == Material.ARROW) {
-                return true;
-            }
+            return true;
         }
 
         return false;
