@@ -3,7 +3,7 @@ description: A project for the Devathon contest
 version: 1.0.0
 author: Cryptkeeper
 
-main: org.devathon.contest2016.DevathonPlugin
+main: org.devathon.contest2016.Plugin
 
 commands:
   test:

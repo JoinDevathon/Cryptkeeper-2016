@@ -28,7 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.devathon.contest2016.DevathonPlugin;
+import org.devathon.contest2016.Plugin;
 import org.devathon.contest2016.npc.NPC;
 
 import java.util.Collections;
@@ -73,7 +73,7 @@ public class ConsumeGoldenAppleLogic implements Logic {
 
         npc.setFrozen(true);
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(DevathonPlugin.getInstance(), () -> {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
             npc.updateWeapon();
             npc.setFrozen(false);
         }, 30L);

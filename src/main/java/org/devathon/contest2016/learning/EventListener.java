@@ -38,7 +38,7 @@ import org.devathon.contest2016.npc.NPCRegistry;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class EventListener implements Listener {
+class EventListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamage(EntityDamageByEntityEvent event) {

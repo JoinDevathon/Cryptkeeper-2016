@@ -25,7 +25,7 @@ package org.devathon.contest2016.npc;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.devathon.contest2016.DevathonPlugin;
+import org.devathon.contest2016.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class NPCRegistry {
     private final List<NPC> npcs = new ArrayList<>();
 
     public void start() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(DevathonPlugin.getInstance(), this::tick, 1L, 1L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(Plugin.getInstance(), this::tick, 1L, 1L);
     }
 
     public void register(NPC npc) {

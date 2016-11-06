@@ -23,6 +23,8 @@
  */
 package org.devathon.contest2016.learning;
 
+import java.util.Objects;
+
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
@@ -47,6 +49,28 @@ public class Event {
 
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Event)) return false;
+        Event event = (Event) o;
+        return timestamp == event.timestamp &&
+                type == event.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timestamp, type);
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "timestamp=" + timestamp +
+                ", type=" + type +
+                '}';
     }
 
     public enum Type {

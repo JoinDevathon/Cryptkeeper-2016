@@ -35,6 +35,9 @@ public class PatternMatrix {
     private final List<List<Event>> events = new ArrayList<>();
     private final List<Event> currentLine = new ArrayList<>();
 
+    PatternMatrix() {
+    }
+
     public void push(Event event) {
         currentLine.add(event);
     }

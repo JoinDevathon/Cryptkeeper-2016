@@ -28,7 +28,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.devathon.contest2016.DevathonPlugin;
+import org.devathon.contest2016.Plugin;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +59,7 @@ public class LearnManager {
             });
 
     public void start() {
-        Bukkit.getPluginManager().registerEvents(new EventListener(), DevathonPlugin.getInstance());
+        Bukkit.getPluginManager().registerEvents(new EventListener(), Plugin.getInstance());
     }
 
     public PatternMatrix get(UUID uuid) {

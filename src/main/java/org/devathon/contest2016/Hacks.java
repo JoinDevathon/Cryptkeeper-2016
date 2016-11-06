@@ -36,7 +36,7 @@ import java.util.List;
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class ItemSet {
+public class Hacks {
 
     public static final List<ItemStack> STANDARD_ITEMS = Arrays.asList(
             new ItemStack(Material.DIAMOND_SWORD),
@@ -50,9 +50,6 @@ public class ItemSet {
             ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.HARM, 20 * 10, 0))),
 
             new ItemStack(Material.IRON_CHESTPLATE),
-            new ItemStack(Material.DIAMOND_HELMET),
-
-            new ItemStack(Material.BOW),
-            new ItemStack(Material.ARROW, 32)
+            new ItemStack(Material.DIAMOND_HELMET)
     );
 }

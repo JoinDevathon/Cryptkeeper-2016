@@ -10,9 +10,9 @@ import org.devathon.contest2016.learning.LearnManager;
 import org.devathon.contest2016.npc.NPCListener;
 import org.devathon.contest2016.npc.NPCRegistry;
 
-public class DevathonPlugin extends JavaPlugin {
+public class Plugin extends JavaPlugin {
 
-    private static DevathonPlugin instance;
+    private static Plugin instance;
 
     @Override
     public void onEnable() {
@@ -26,7 +26,7 @@ public class DevathonPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
         getServer().getPluginManager().registerEvents(new GeneralListener(), this);
 
-        getServer().getScheduler().scheduleSyncDelayedTask(DevathonPlugin.getInstance(), () -> {
+        getServer().getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
             World world = Bukkit.getWorlds().get(0);
 
             int size = 50;
@@ -47,7 +47,7 @@ public class DevathonPlugin extends JavaPlugin {
         });
     }
 
-    public static DevathonPlugin getInstance() {
+    public static Plugin getInstance() {
         return instance;
     }
 }

@@ -36,8 +36,8 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.devathon.contest2016.DevathonPlugin;
-import org.devathon.contest2016.ItemSet;
+import org.devathon.contest2016.Plugin;
+import org.devathon.contest2016.Hacks;
 import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
 import org.devathon.contest2016.logic.AttackLogic;
@@ -129,7 +129,7 @@ public class NPC {
 
                 pendingPickups.clear();
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(DevathonPlugin.getInstance(), () -> {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), () -> {
                     setFrozen(false);
                 }, delay);
             } else {
@@ -160,7 +160,7 @@ public class NPC {
         entity.getEquipment().setItemInMainHand(null);
         entity.getEquipment().setItemInOffHand(null);
 
-        for (ItemStack itemStack : ItemSet.STANDARD_ITEMS) {
+        for (ItemStack itemStack : Hacks.STANDARD_ITEMS) {
             pickupItem(itemStack.clone());
         }
 
