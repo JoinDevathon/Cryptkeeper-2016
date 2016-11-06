@@ -164,7 +164,7 @@ public class NPC {
         entity.getEquipment().setItemInMainHand(null);
         entity.getEquipment().setItemInOffHand(null);
 
-        for (ItemStack itemStack : Hacks.STANDARD_ITEMS) {
+        for (ItemStack itemStack : Plugin.getInstance().getKitItems()) {
             pickupItem(itemStack.clone());
         }
 
