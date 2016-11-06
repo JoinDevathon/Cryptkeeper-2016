@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.devathon.contest2016.command.TestCommand;
+import org.devathon.contest2016.learning.LearnManager;
 import org.devathon.contest2016.npc.NPCListener;
 import org.devathon.contest2016.npc.NPCRegistry;
 
@@ -13,13 +14,12 @@ public class DevathonPlugin extends JavaPlugin {
 
     private static DevathonPlugin instance;
 
-    private final NPCRegistry registry = new NPCRegistry();
-
     @Override
     public void onEnable() {
         instance = this;
 
-        registry.start();
+        NPCRegistry.getInstance().start();
+        LearnManager.getInstance().start();
 
         getCommand("test").setExecutor(new TestCommand());
 
@@ -45,10 +45,6 @@ public class DevathonPlugin extends JavaPlugin {
 
             world.setSpawnLocation(size / 2, 205, size / 2);
         });
-    }
-
-    public NPCRegistry getNPCRegistry() {
-        return registry;
     }
 
     public static DevathonPlugin getInstance() {

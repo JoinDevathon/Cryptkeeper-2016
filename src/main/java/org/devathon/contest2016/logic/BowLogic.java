@@ -21,38 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
+package org.devathon.contest2016.logic;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.devathon.contest2016.util.ItemStackUtil;
-
-import java.util.Arrays;
-import java.util.List;
+import org.devathon.contest2016.npc.NPC;
+import org.devathon.contest2016.util.EntityUtil;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class ItemSet {
+public class BowLogic implements Logic {
 
-    public static final List<ItemStack> STANDARD_ITEMS = Arrays.asList(
-            new ItemStack(Material.DIAMOND_SWORD),
+    private final NPC npc;
 
-            new ItemStack(Material.GOLDEN_APPLE),
-            new ItemStack(Material.GOLDEN_APPLE),
-            new ItemStack(Material.GOLDEN_APPLE),
+    public BowLogic(NPC npc) {
+        this.npc = npc;
+    }
 
-            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.SLOW, 20 * 10, 1))),
-            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.WITHER, 20 * 10, 0))),
-            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.HARM, 20 * 10, 0))),
+    @Override
+    public void tick() {
 
-            new ItemStack(Material.IRON_CHESTPLATE),
-            new ItemStack(Material.DIAMOND_HELMET),
+    }
 
-            new ItemStack(Material.BOW),
-            new ItemStack(Material.ARROW, 32)
-    );
+    @Override
+    public void execute() {
+        EntityUtil.look(npc.getBukkitEntity(), npc.getTarget());
+    }
+
+    @Override
+    public double getWeight() {
+        if (npc.isWithinToTarget(10 * 10)) {
+            return 0;
+        }
+
+        if (!hasArrows()) {
+            return 0;
+        }
+
+        return 0.5;
+    }
+
+    private boolean hasArrows() {
+        for (ItemStack itemStack : npc.getInventory()) {
+            if (itemStack.getType() == Material.ARROW) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

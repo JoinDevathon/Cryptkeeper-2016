@@ -27,7 +27,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustEvent;
-import org.devathon.contest2016.DevathonPlugin;
 
 /**
  * @author Cryptkeeper
@@ -37,7 +36,7 @@ public class NPCListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityCombust(EntityCombustEvent event) {
-        if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity()) && event.getDuration() == 8) {
+        if (NPCRegistry.getInstance().isNPC(event.getEntity()) && event.getDuration() == 8) {
             event.setCancelled(true);
         }
     }

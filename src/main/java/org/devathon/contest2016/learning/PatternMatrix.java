@@ -21,38 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016;
+package org.devathon.contest2016.learning;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.devathon.contest2016.util.ItemStackUtil;
-
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class ItemSet {
+public class PatternMatrix {
 
-    public static final List<ItemStack> STANDARD_ITEMS = Arrays.asList(
-            new ItemStack(Material.DIAMOND_SWORD),
+    private final List<List<Event>> events = new ArrayList<>();
+    private final List<Event> currentLine = new ArrayList<>();
 
-            new ItemStack(Material.GOLDEN_APPLE),
-            new ItemStack(Material.GOLDEN_APPLE),
-            new ItemStack(Material.GOLDEN_APPLE),
+    public void push(Event event) {
+        currentLine.add(event);
+    }
 
-            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.SLOW, 20 * 10, 1))),
-            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.WITHER, 20 * 10, 0))),
-            ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.HARM, 20 * 10, 0))),
+    public void end() {
+        events.add(new ArrayList<>(currentLine));
 
-            new ItemStack(Material.IRON_CHESTPLATE),
-            new ItemStack(Material.DIAMOND_HELMET),
-
-            new ItemStack(Material.BOW),
-            new ItemStack(Material.ARROW, 32)
-    );
+        currentLine.clear();
+    }
 }

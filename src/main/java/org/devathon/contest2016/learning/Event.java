@@ -21,42 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.command;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.devathon.contest2016.ItemSet;
-import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.npc.NPCOptions;
-import org.devathon.contest2016.npc.NPCRegistry;
+package org.devathon.contest2016.learning;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class TestCommand implements CommandExecutor {
+public class Event {
 
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+    public static Event ofNow(Type type) {
+        return new Event(System.currentTimeMillis(), type);
+    }
 
-            player.getInventory().clear();
+    private final long timestamp;
+    private final Type type;
 
-            for (ItemStack itemStack : ItemSet.STANDARD_ITEMS) {
-                player.getInventory().addItem(itemStack.clone());
-            }
+    public Event(long timestamp, Type type) {
+        this.timestamp = timestamp;
+        this.type = type;
+    }
 
-            NPC npc = new NPC(player.getUniqueId(), NPCOptions.create());
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-            npc.spawn(player.getLocation().add(10, 0, 10));
+    public Type getType() {
+        return type;
+    }
 
-            NPCRegistry.getInstance().register(npc);
-        }
+    public enum Type {
 
-        return true;
+        THROW_POTION,
+        CONSUME_GOLDEN_APPLE,
+        ATTACK
     }
 }

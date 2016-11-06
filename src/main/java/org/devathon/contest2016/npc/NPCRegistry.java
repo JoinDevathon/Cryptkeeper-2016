@@ -36,6 +36,15 @@ import java.util.List;
  */
 public class NPCRegistry {
 
+    private static final NPCRegistry INSTANCE = new NPCRegistry();
+
+    public static NPCRegistry getInstance() {
+        return INSTANCE;
+    }
+
+    private NPCRegistry() {
+    }
+
     private final List<NPC> npcs = new ArrayList<>();
 
     public void start() {
