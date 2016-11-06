@@ -40,8 +40,8 @@ public class NPCOptions {
     private double lowReachDistance = 1.5;
     private double highReachDistance = 3;
     private double sprintDistance = 5;
-    private double walkSpeed = 2.5;
-    private double sprintSpeed = 3.5;
+    private double walkSpeed = 2.75;
+    private double sprintSpeed = 3.75;
 
     private NPCOptions() {
     }
