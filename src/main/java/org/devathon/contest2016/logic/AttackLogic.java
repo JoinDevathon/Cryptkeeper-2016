@@ -47,18 +47,20 @@ public class AttackLogic implements Logic {
 
     @Override
     public void tick() {
-        ticksSinceAttack++;
+        ticksSinceAttack--;
     }
 
     @Override
     public void execute() {
+        ticksSinceAttack = (int) Math.round(20 / (double) npc.getOptions().getSimulatedCPS());
+
         npc.getEntity().a(EnumHand.MAIN_HAND);
         npc.getEntity().B(((CraftLivingEntity) npc.getTarget()).getHandle());
     }
 
     @Override
     public double getWeight() {
-        if (ticksSinceAttack < (20 / (double) npc.getOptions().getSimulatedCPS())) {
+        if (ticksSinceAttack > 0) {
             return 0;
         }
 
