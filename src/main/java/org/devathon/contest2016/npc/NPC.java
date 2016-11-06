@@ -145,6 +145,8 @@ public class NPC {
             }
         }
 
+        LearnManager.getInstance().get(target).flipCurrent();
+
         updateSpeed();
         updateNameTag();
 

@@ -39,5 +39,32 @@ import org.devathon.contest2016.npc.NPCRegistry;
  */
 class EventListener implements Listener {
 
-    
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
+        if (NPCRegistry.getInstance().isNPC(event.getEntity())) {
+            if (event.getDamager() instanceof Player) {
+                PatternMatrix state = LearnManager.getInstance().get((Player) event.getDamager());
+
+                state.push(PatternMatrix.Event.ATTACK);
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onItemConsume(PlayerItemConsumeEvent event) {
+        PatternMatrix state = LearnManager.getInstance().get(event.getPlayer());
+
+        state.push(PatternMatrix.Event.CONSUME_GOLDEN_APPLE);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onThrowPotion(ProjectileLaunchEvent event) {
+        if (event.getEntity() instanceof ThrownPotion && event.getEntity().getShooter() instanceof Player) {
+            Player shooter = (Player) event.getEntity().getShooter();
+
+            PatternMatrix state = LearnManager.getInstance().get(shooter);
+
+            state.push(PatternMatrix.Event.THROW_POTION);
+        }
+    }
 }

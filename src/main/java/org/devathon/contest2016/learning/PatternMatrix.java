@@ -92,7 +92,7 @@ public class PatternMatrix {
                     Event event = list.get(i);
 
                     if (!entry.increment(event)) {
-                        entry.put(event, 0);
+                        entry.put(event, 1);
                     }
                 }
             }
