@@ -118,7 +118,7 @@ public class NPC {
         }
 
         if (pendingPickups.size() > 0) {
-            if (!isWithinToTarget(5 * 5)) {
+            if (!isWithinToTarget(4 * 4)) {
                 setFrozen(true);
 
                 long delay = Math.min(pendingPickups.size(), 3) * 20;
@@ -134,7 +134,7 @@ public class NPC {
                 ticksTilOverride--;
 
                 if (ticksTilOverride <= 0) {
-                    ticksTilOverride = 30;
+                    ticksTilOverride = 100;
 
                     pickupItem(pendingPickups.remove(0));
                 }
