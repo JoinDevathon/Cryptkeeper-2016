@@ -20,6 +20,7 @@ public class DevathonPlugin extends JavaPlugin {
         getCommand("test").setExecutor(new TestCommand());
 
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
+        getServer().getPluginManager().registerEvents(new WorldListener(), this);
     }
 
     public NPCRegistry getNPCRegistry() {

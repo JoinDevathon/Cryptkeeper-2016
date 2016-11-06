@@ -41,8 +41,6 @@ public class FakeZombie extends EntityZombie {
         EntityUtil.register(EntityType.ZOMBIE, FakeZombie.class);
     }
 
-    public boolean standingStill = true;
-
     public FakeZombie(Location location) {
         super(NMSUtil.getWorld(location.getWorld()));
 

@@ -21,26 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.entity;
+package org.devathon.contest2016;
 
-import net.minecraft.server.v1_10_R1.EntityLiving;
-import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldLoadEvent;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class FollowEntityPathfinderGoal extends PathfinderGoalMeleeAttack {
+public class WorldListener implements Listener {
 
-    private final FakeZombie npc;
+    @EventHandler
+    public void onWorldLoad(WorldLoadEvent event) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(DevathonPlugin.getInstance(), () -> {
+            int size = 50;
 
-    public FollowEntityPathfinderGoal(FakeZombie npc, double var2, boolean var4) {
-        super(npc, var2, var4);
+            for (int x = 0; x < size; x++) {
+                for (int z = 0; z < size; z++) {
+                    int maxHeight = (x == 0 || z == 0 || x == size - 1 || z == size - 1) ? 5 : 1;
 
-        this.npc = npc;
-    }
+                    for (int y = 0; y < maxHeight; y++) {
+                        Location location = new Location(event.getWorld(), x, 200 + y, z);
 
-    @Override
-    protected void a(EntityLiving var1, double var2) {
+                        location.getBlock().setType(maxHeight > 1 ? Material.STONE : Material.GRASS);
+                    }
+                }
+            }
+
+            event.getWorld().setSpawnLocation(size / 2, 205, size / 2);
+        });
     }
 }

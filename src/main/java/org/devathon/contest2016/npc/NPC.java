@@ -63,10 +63,13 @@ import static org.devathon.contest2016.util.ItemStackUtil.getGenericDefense;
 public class NPC {
 
     private final List<ItemStack> itemStacks = new ArrayList<>();
+    private final List<ItemStack> pendingPickups = new ArrayList<>();
 
     private final Supplier<Player> target;
     private final List<Logic> logics;
     private final NPCOptions options;
+
+    private int ticksTilOverride = 10;
 
     private FakeZombie entity;
 
@@ -102,31 +105,43 @@ public class NPC {
             logic.execute();
         }
 
-        for (Entity entity : getBukkitEntity().getNearbyEntities(4.5, 2.5, 4.5)) {
+        for (Entity entity : getBukkitEntity().getNearbyEntities(2.5, 1.5, 2.5)) {
             if (entity instanceof Item) {
                 Item item = (Item) entity;
 
                 if (item.getPickupDelay() <= 10) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(DevathonPlugin.getInstance(), () -> {
-                        pickupItem(item.getItemStack());
-                    }, 20L);
+                    pendingPickups.add(item.getItemStack());
 
                     item.remove();
                 }
             }
         }
 
-        Player target = getTarget();
+        if (pendingPickups.size() > 0) {
+            if (!isWithinToTarget(5 * 5)) {
+                setFrozen(true);
 
-        if (target != null) {
-            double distanceSq = getLocation().distanceSquared(target.getLocation());
+                long delay = Math.min(pendingPickups.size(), 3) * 20;
 
-            if (distanceSq > Math.pow(options.getSprintDistance(), 2)) {
-                setSprinting(true);
+                pendingPickups.forEach(this::pickupItem);
+
+                pendingPickups.clear();
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(DevathonPlugin.getInstance(), () -> {
+                    setFrozen(false);
+                }, delay);
             } else {
-                setSprinting(target.isSprinting());
+                ticksTilOverride--;
+
+                if (ticksTilOverride <= 0) {
+                    ticksTilOverride = 30;
+
+                    pickupItem(pendingPickups.remove(0));
+                }
             }
         }
+
+        updateSpeed();
     }
 
     public void spawn(Location location) {
@@ -155,8 +170,26 @@ public class NPC {
         updateArmor();
     }
 
+    private void updateSpeed() {
+        if (!isWithinToTarget(Math.pow(options.getSprintDistance(), 2))) {
+            setSprinting(true);
+        } else {
+            Player target = getTarget();
+
+            setSprinting(target.isSprinting());
+        }
+    }
+
+    public void setFrozen(boolean frozen) {
+        if (frozen) {
+            getBukkitEntity().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 9), true);
+        } else {
+            getBukkitEntity().removePotionEffect(PotionEffectType.SLOW);
+        }
+    }
+
     public void setSprinting(boolean sprinting) {
-        double speed = sprinting ? 5 : 3;
+        double speed = sprinting ? 4 : 2.75;
 
         speed *= NMSUtil.PLAYER_ABILITIES.walkSpeed;
 
@@ -217,5 +250,17 @@ public class NPC {
 
     public boolean isAlive() {
         return entity.isAlive();
+    }
+
+    private boolean isWithinToTarget(double distanceSq) {
+        Player target = getTarget();
+
+        if (target != null) {
+            double currentDistanceSq = getLocation().distanceSquared(target.getLocation());
+
+            return currentDistanceSq < distanceSq;
+        }
+
+        return false;
     }
 }

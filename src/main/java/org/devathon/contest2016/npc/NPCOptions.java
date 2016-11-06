@@ -34,11 +34,11 @@ public class NPCOptions {
     }
 
     private String displayName = "Dummy";
-    private int simulatedCPS = 7;
+    private int simulatedCPS = 5;
     private int potionThrowDelay = 15;
     private double attackDamage = 3;
     private double lowReachDistance = 1.5;
-    private double highReachDistance = 3.5;
+    private double highReachDistance = 3;
     private double sprintDistance = 5;
 
     private NPCOptions() {
