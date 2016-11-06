@@ -21,42 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.devathon.contest2016.command;
+package org.devathon.contest2016.logic;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.devathon.contest2016.DevathonPlugin;
-import org.devathon.contest2016.ItemSet;
 import org.devathon.contest2016.npc.NPC;
-import org.devathon.contest2016.npc.NPCOptions;
 
 /**
  * @author Cryptkeeper
  * @since 05.11.2016
  */
-public class TestCommand implements CommandExecutor {
+public class ConsumeItemLogic implements Logic {
+
+    private final NPC npc;
+
+    public ConsumeItemLogic(NPC npc) {
+        this.npc = npc;
+    }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+    public void tick() {
 
-            player.getInventory().clear();
+    }
 
-            for (ItemStack itemStack : ItemSet.STANDARD_ITEMS) {
-                player.getInventory().addItem(itemStack.clone());
-            }
+    @Override
+    public void execute() {
 
-            NPC npc = new NPC(() -> player, NPCOptions.create());
+    }
 
-            npc.spawn(player.getLocation());
-
-            DevathonPlugin.getInstance().getNPCRegistry().register(npc);
-        }
-
-        return true;
+    @Override
+    public double getWeight() {
+        return 0;
     }
 }

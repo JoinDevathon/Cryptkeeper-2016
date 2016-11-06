@@ -29,7 +29,6 @@ import net.minecraft.server.v1_10_R1.GenericAttributes;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -38,12 +37,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.devathon.contest2016.DevathonPlugin;
+import org.devathon.contest2016.ItemSet;
 import org.devathon.contest2016.data.ArmorCategory;
 import org.devathon.contest2016.entity.FakeZombie;
 import org.devathon.contest2016.logic.AttackLogic;
+import org.devathon.contest2016.logic.ConsumeItemLogic;
 import org.devathon.contest2016.logic.Logic;
 import org.devathon.contest2016.logic.ThrowPotionLogic;
-import org.devathon.contest2016.util.ItemStackUtil;
 import org.devathon.contest2016.util.NMSUtil;
 import org.devathon.contest2016.util.SelectUtil;
 
@@ -77,7 +77,9 @@ public class NPC {
         this.target = target;
         this.options = options;
 
-        this.logics = Arrays.asList(new ThrowPotionLogic(this), new AttackLogic(this));
+        this.logics = Arrays.asList(new ThrowPotionLogic(this),
+                new AttackLogic(this),
+                new ConsumeItemLogic(this));
     }
 
     public void tick() {
@@ -158,8 +160,8 @@ public class NPC {
         entity.getEquipment().setItemInMainHand(null);
         entity.getEquipment().setItemInOffHand(null);
 
-        for (int i = 0; i < 36; i++) {
-            itemStacks.add(ItemStackUtil.makeSplashPotion(Material.SPLASH_POTION, Arrays.asList(new PotionEffect(PotionEffectType.HEAL, 20 * 10, 0))));
+        for (ItemStack itemStack : ItemSet.STANDARD_ITEMS) {
+            pickupItem(itemStack.clone());
         }
     }
 
