@@ -23,10 +23,7 @@
  */
 package org.devathon.contest2016.entity;
 
-import net.minecraft.server.v1_10_R1.EntityZombie;
-import net.minecraft.server.v1_10_R1.EnumZombieType;
-import net.minecraft.server.v1_10_R1.MobEffect;
-import net.minecraft.server.v1_10_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_10_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.entity.EntityType;
@@ -57,7 +54,8 @@ public class FakeZombie extends EntityZombie {
     public void r() {
         goalSelector = new PathfinderGoalSelector(NMSUtil.METHOD_PROFILER);
 
-        goalSelector.a(0, new PathfinderGoalHarmlessAttack(this, 1D, false));
+        goalSelector.a(0, new PathfinderGoalFloat(this));
+        goalSelector.a(1, new PathfinderGoalHarmlessAttack(this, 1D, false));
     }
 
     @Override
