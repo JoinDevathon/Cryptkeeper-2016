@@ -50,7 +50,7 @@ public class TestCommand implements CommandExecutor {
                 player.getInventory().addItem(itemStack.clone());
             }
 
-            NPC npc = new NPC(() -> player, NPCOptions.create());
+            NPC npc = new NPC(player.getUniqueId(), NPCOptions.create());
 
             npc.spawn(player.getLocation().add(10, 0, 10));
 

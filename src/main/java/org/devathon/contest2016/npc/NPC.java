@@ -50,7 +50,7 @@ import org.devathon.contest2016.util.SelectUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.devathon.contest2016.util.ItemStackUtil.getGenericAttackDamage;
@@ -65,7 +65,7 @@ public class NPC {
     private final List<ItemStack> itemStacks = new ArrayList<>();
     private final List<ItemStack> pendingPickups = new ArrayList<>();
 
-    private final Supplier<Player> target;
+    private final UUID target;
     private final List<Logic> logics;
     private final NPCOptions options;
 
@@ -73,7 +73,7 @@ public class NPC {
 
     private FakeZombie entity;
 
-    public NPC(Supplier<Player> target, NPCOptions options) {
+    public NPC(UUID target, NPCOptions options) {
         this.target = target;
         this.options = options;
 
@@ -168,6 +168,10 @@ public class NPC {
         updateSpeed();
     }
 
+    public void destroy() {
+        entity.world.removeEntity(entity);
+    }
+
     private void pickupItem(ItemStack itemStack) {
         itemStacks.add(itemStack);
 
@@ -214,7 +218,7 @@ public class NPC {
     }
 
     public Player getTarget() {
-        return target.get();
+        return Bukkit.getPlayer(target);
     }
 
     public void updateWeapon() {

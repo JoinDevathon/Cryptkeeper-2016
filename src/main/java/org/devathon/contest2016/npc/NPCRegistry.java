@@ -50,15 +50,19 @@ public class NPCRegistry {
         List<NPC> toRemove = null;
 
         for (NPC npc : npcs) {
-            npc.tick();
-
-            if (!npc.isAlive()) {
+            if (!npc.isAlive() || (npc.getTarget() == null || npc.getTarget().isDead())) {
                 if (toRemove == null) {
                     toRemove = new ArrayList<>();
                 }
 
                 toRemove.add(npc);
+
+                npc.destroy();
+
+                continue;
             }
+
+            npc.tick();
         }
 
         if (toRemove != null) {

@@ -34,7 +34,7 @@ import org.devathon.contest2016.DevathonPlugin;
  * @since 05.11.2016
  */
 public class NPCListener implements Listener {
-    
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityCombust(EntityCombustEvent event) {
         if (DevathonPlugin.getInstance().getNPCRegistry().isNPC(event.getEntity()) && event.getDuration() == 8) {
