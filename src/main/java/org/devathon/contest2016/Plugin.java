@@ -13,7 +13,7 @@ public class Plugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        NPCRegistry.getInstance().start();
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, NPCRegistry.getInstance()::tick, 1L, 1L);
 
         getServer().getPluginManager().registerEvents(new PatternListener(), this);
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
